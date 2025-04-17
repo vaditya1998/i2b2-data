@@ -1,4 +1,3 @@
-
 create table RPDO_TABLE_REQUEST
 (
     TABLE_REQUEST_ID                   int identity,
@@ -31,7 +30,8 @@ create table RPDO_TABLE_REQUEST
     CONSTRAIN_BY_INDEXDATE_COLUMNNAME  varchar(1000),
     CONSTRAIN_BY_INDEXDATE_FROM_DAYS   int,
     CONSTRAIN_BY_INDEXDATE_TO_DAYS     int,
-    USE_AS_COHORT                      char
+    USE_AS_COHORT                      char,
+    REQUIRED                           varchar(3)
 )
 go
 
