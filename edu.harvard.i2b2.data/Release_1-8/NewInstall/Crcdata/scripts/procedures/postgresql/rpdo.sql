@@ -1,9 +1,9 @@
-CREATE OR REPLACE FUNCTION usp_rpdo2(
+CREATE OR REPLACE PROCEDURE usp_rpdo2(
     p_table_instance_id  INTEGER,
     p_result_instance_id INTEGER DEFAULT NULL,
     p_min_row            INTEGER DEFAULT NULL,
     p_max_row            INTEGER DEFAULT NULL
-) RETURNS refcursor AS $$
+) AS $$
 DECLARE
     cur refcursor;
     v_patientset_sql TEXT;
@@ -218,7 +218,8 @@ END;
 		WHEN agg_type LIKE 'Num%' THEN '''0''' 
 		ELSE '''''' 
 	  END ||
-	  ') AS "' || c_columnname || '"', ', ')
+	  ') AS "' || c_columnname || '_' || SET_INDEX || '"', ', ')
+	  --') AS "' || c_columnname || '"', ', ')
 	INTO v_select_col
 	FROM (SELECT DISTINCT SET_INDEX, c_columnname, agg_type FROM TMP_COLUMN_DEFINITIONS) t;
 
@@ -230,9 +231,19 @@ END;
                    ' CROSS JOIN TMP_COLUMN_DEFINITIONS t ' ||
                    ' LEFT JOIN TMP_RESULTS_TALL ce ON ce.col = t.c_columnname AND p.patient_num = ce.patient_num' ||
                    ') sub GROUP BY patient_num';
+                   
+    RAISE NOTICE 'usp_rpdo2: Final pivot SQL: %',v_pivot_sql;
+		-- Step: Drop the temp table if it already exists
+	EXECUTE 'DROP TABLE IF EXISTS tmp_pivot_results';
+
+	-- Step: Create temp table with dynamic pivot SQL
+	EXECUTE format('CREATE TEMP TABLE tmp_pivot_results AS %s', v_pivot_sql);
     
-    OPEN cur FOR EXECUTE v_pivot_sql;
-    RETURN cur;
+    --OPEN cur FOR EXECUTE v_pivot_sql;
+    --RETURN cur;
+	--EXECUTE format('CREATE TEMP TABLE my_table AS %s', v_pivot_sql);
+	--RETURN QUERY EXECUTE 'SELECT * FROM my_table';
+
 EXCEPTION
     WHEN OTHERS THEN
         RAISE;
