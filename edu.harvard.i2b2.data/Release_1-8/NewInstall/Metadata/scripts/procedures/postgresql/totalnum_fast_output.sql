@@ -98,6 +98,5 @@ BEGIN
     -- Build the report table by calling the BuildTotalnumReport procedure with parameters 10 and 6.5.
     PERFORM buildtotalnumreport(10, 6.5);
     
-    COMMIT;
 END;
 $$;
