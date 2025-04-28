@@ -40,15 +40,48 @@ BEGIN
             'where patient_num IN (' || p_patientset_sql || ')';
         RETURN v_rpdo_column_sql;
     END IF;*/
-    RAISE NOTICE 'tab % agg %',p_c_tablename,p_agg_type
-
-    IF p_c_tablename = 'patient_dimension' AND p_agg_type = 'Value' THEN
-        v_rpdo_column_sql :=
-            'select patient_num, ''' || p_column_name || ''' as col, ' ||
-            'TO_CHAR(' || p_c_facttablecolumn || ', ''YYYY-MM-DD'') as val from patient_dimension ' ||
-            'where patient_num IN (' || p_patientset_sql || ')';
-    	RAISE NOTICE 'patdimcol %', v_rpdo_column_sql;
+    RAISE NOTICE 'tab % agg %',p_c_tablename,p_agg_type;
     
+
+	IF p_c_tablename = 'patient_dimension' AND p_agg_type = 'Value' THEN
+
+	  -- Numeric: cast to text so it fits into our val column (which is text)
+	  IF p_c_columndatatype = 'N' THEN
+		v_rpdo_column_sql :=
+		  'SELECT patient_num, ' ||
+		  quote_literal(p_column_name) || ' AS col, ' ||
+		  p_c_facttablecolumn || '::text AS val ' ||
+		  'FROM patient_dimension ' ||
+		  'WHERE patient_num IN (' || p_patientset_sql || ')';
+
+	  -- Text/String: already text, no need to cast
+	  ELSIF p_c_columndatatype IN ('T','S') THEN
+		v_rpdo_column_sql :=
+		  'SELECT patient_num, ' ||
+		  quote_literal(p_column_name) || ' AS col, ' ||
+		  p_c_facttablecolumn || ' AS val ' ||
+		  'FROM patient_dimension ' ||
+		  'WHERE patient_num IN (' || p_patientset_sql || ')';
+
+	  -- Date: format as YYYY-MM-DD
+	  ELSIF p_c_columndatatype = 'D' THEN
+		v_rpdo_column_sql :=
+		  'SELECT patient_num, ' ||
+		  quote_literal(p_column_name) || ' AS col, ' ||
+		  'to_char('||p_c_facttablecolumn||', ''YYYY-MM-DD'') AS val ' ||
+		  'FROM patient_dimension ' ||
+		  'WHERE patient_num IN (' || p_patientset_sql || ')';
+
+	  -- Fallback: treat anything else as text
+	  ELSE
+		v_rpdo_column_sql :=
+		  'SELECT patient_num, ' ||
+		  quote_literal(p_column_name) || ' AS col, ' ||
+		  p_c_facttablecolumn || '::text AS val ' ||
+		  'FROM patient_dimension ' ||
+		  'WHERE patient_num IN (' || p_patientset_sql || ')';
+	  END IF;
+
     ELSIF p_c_tablename = 'qt_patient_set_collection' AND p_agg_type = 'Exists' THEN
         v_rpdo_column_sql :=
             'select patient_num, ''' || p_column_name || ''' as col, ''Yes'' as val from qt_patient_set_collection ' ||

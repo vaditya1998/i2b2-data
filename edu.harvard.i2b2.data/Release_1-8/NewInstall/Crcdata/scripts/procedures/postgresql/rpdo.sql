@@ -26,6 +26,7 @@ BEGIN
 		C_TABLENAME                        VARCHAR(100),
 		C_FULLPATH                         VARCHAR(700),
 		C_COLUMNNAME                       VARCHAR(30),
+		COLUMN_NAME						   VARCHAR(1000),
 		C_OPERATOR                         VARCHAR(30),
 		C_DIMCODE                          VARCHAR(1000),
 		C_COLUMNDATATYPE                   VARCHAR(50),
@@ -43,8 +44,9 @@ BEGIN
 	) ON COMMIT PRESERVE ROWS;
 EXCEPTION
     WHEN duplicate_table THEN
-        -- Table already exists, do nothing
-    	RAISE NOTICE 'Temporary table TMP_COLUMN_DEFINITIONS already exists.'; -- Optional: Log or notify
+        -- Table already exists
+        TRUNCATE TABLE TMP_COLUMN_DEFINITIONS;
+    	--RAISE NOTICE 'Temporary table TMP_COLUMN_DEFINITIONS already exists.'; -- Optional: Log or notify
 END;
 
 BEGIN
@@ -56,8 +58,9 @@ BEGIN
 	) ON COMMIT PRESERVE ROWS;
 EXCEPTION
     WHEN duplicate_table THEN
-        -- Table already exists, do nothing
-        RAISE NOTICE 'Temporary table TMP_RESULTS_TALL already exists.'; -- Optional: Log or notify
+        -- Table already exists
+        TRUNCATE TABLE TMP_RESULTS_TALL;
+        --RAISE NOTICE 'Temporary table TMP_RESULTS_TALL already exists.'; -- Optional: Log or notify
 END;
     
     -- Populate TMP_COLUMN_DEFINITIONS from RPDO_TABLE_REQUEST
@@ -70,6 +73,7 @@ END;
         C_TABLENAME,
         C_FULLPATH,
         C_COLUMNNAME,
+        COLUMN_NAME,
         C_OPERATOR,
         C_DIMCODE,
         C_COLUMNDATATYPE,
@@ -94,6 +98,7 @@ END;
         C_TABLENAME,
         C_FULLPATH,
         C_COLUMNNAME,
+        COLUMN_NAME,
         C_OPERATOR,
         C_DIMCODE,
         C_COLUMNDATATYPE,
@@ -210,27 +215,26 @@ END;
         v_set_index := v_set_index + 1;
     END LOOP;
     
-    -- Build the SELECT column list for pivot (using conditional aggregation)
+    -- Build the SELECT column list for pivot (using conditional aggregation)	
 	SELECT string_agg(
-	  'COALESCE(MAX(CASE WHEN c_columnname = ''' || c_columnname || ''' THEN val END)::text, ' ||
-	  CASE 
-		WHEN agg_type = 'Exists' THEN '''No''' 
-		WHEN agg_type LIKE 'Num%' THEN '''0''' 
-		ELSE '''''' 
+	  'COALESCE(MAX(CASE WHEN col = ''' || column_name || ''' THEN val END)::text, ' ||
+	  CASE
+		WHEN agg_type = 'Exists' THEN '''No'''
+		WHEN agg_type LIKE 'Num%' THEN '''0'''
+		ELSE ''''''
 	  END ||
-	  ') AS "' || c_columnname || '_' || SET_INDEX || '"', ', ')
+	  ') AS "' || column_name || '_' || SET_INDEX || '"', ', ')
 	  --') AS "' || c_columnname || '"', ', ')
 	INTO v_select_col
-	FROM (SELECT DISTINCT SET_INDEX, c_columnname, agg_type FROM TMP_COLUMN_DEFINITIONS) t;
+	FROM (SELECT DISTINCT SET_INDEX, column_name, agg_type FROM TMP_COLUMN_DEFINITIONS) t;
 
-
-    
     v_pivot_sql := 'SELECT patient_num, ' || v_select_col || ' FROM (' ||
-                   ' SELECT p.patient_num, t.c_columnname, ce.val ' ||
+                   ' SELECT p.patient_num, ce.col, ce.val ' ||
                    ' FROM (' || v_patientset_sql || ') p ' ||
                    ' CROSS JOIN TMP_COLUMN_DEFINITIONS t ' ||
                    ' LEFT JOIN TMP_RESULTS_TALL ce ON ce.col = t.c_columnname AND p.patient_num = ce.patient_num' ||
                    ') sub GROUP BY patient_num';
+
                    
     RAISE NOTICE 'usp_rpdo2: Final pivot SQL: %',v_pivot_sql;
 		-- Step: Drop the temp table if it already exists
