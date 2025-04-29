@@ -66,13 +66,61 @@ BEGIN
 	DECLARE @aggregation_sql NVARCHAR(MAX)
 
 
-	IF @C_TABLENAME = 'patient_dimension' and @AGG_TYPE = 'Value'
+	IF @C_TABLENAME = 'patient_dimension' AND @AGG_TYPE = 'Value'
+	BEGIN
+		-- Numeric ---------------------------------------------------
+		IF @C_COLUMNDATATYPE = 'N'
+		BEGIN
+			SET @rpdo_column_sql =
+				'SELECT patient_num, ''' + @COLUMN_NAME + ''' AS col, ' +
+				 @C_FACTTABLECOLUMN + ' AS val ' +
+				'FROM patient_dimension ' +
+				'WHERE patient_num IN (' + @PATIENTSET_SQL + ')';
+			RETURN @rpdo_column_sql;
+		END
+
+		-- Text/String -----------------------------------------------
+		ELSE IF @C_COLUMNDATATYPE IN ('T','S')
+		BEGIN
+			SET @rpdo_column_sql =
+				'SELECT patient_num, ''' + @COLUMN_NAME + ''' AS col, ' +
+				'CONVERT(VARCHAR(100), ' + @C_FACTTABLECOLUMN + ') AS val ' +
+				'FROM patient_dimension ' +
+				'WHERE patient_num IN (' + @PATIENTSET_SQL + ')';
+			RETURN @rpdo_column_sql;
+		END
+
+		-- Date ------------------------------------------------------
+		ELSE IF @C_COLUMNDATATYPE = 'D'
+		BEGIN
+			SET @rpdo_column_sql =
+				'SELECT patient_num, ''' + @COLUMN_NAME + ''' AS col, ' +
+				'CONVERT(VARCHAR(10), ' + @C_FACTTABLECOLUMN + ', 23) AS val ' +
+				'FROM patient_dimension ' +
+				'WHERE patient_num IN (' + @PATIENTSET_SQL + ')';
+			RETURN @rpdo_column_sql;
+		END
+
+		-- Fallback (anything else as text) -------------------------
+		ELSE
+		BEGIN
+			SET @rpdo_column_sql =
+				'SELECT patient_num, ''' + @COLUMN_NAME + ''' AS col, ' +
+				 @C_FACTTABLECOLUMN + ' AS val ' +
+				'FROM patient_dimension ' +
+				'WHERE patient_num IN (' + @PATIENTSET_SQL + ')';
+			RETURN @rpdo_column_sql;
+		END
+	END
+
+	/*IF @C_TABLENAME = 'patient_dimension' and @AGG_TYPE = 'Value'
 	BEGIN
 		SELECT @rpdo_column_sql = 'select patient_num, ''' + @COLUMN_NAME + ''' col,
 				CONVERT(VARCHAR(100), ' + @C_FACTTABLECOLUMN + ', 23)
 				val from patient_dimension
 				where patient_num IN (' + @PATIENTSET_SQL + ')'
-	END
+	END*/
+	
 	ELSE IF @C_TABLENAME = 'qt_patient_set_collection' and @AGG_TYPE = 'Exists'
 	BEGIN
 		SELECT @rpdo_column_sql = 'select patient_num, ''' + @COLUMN_NAME + ''' col,
