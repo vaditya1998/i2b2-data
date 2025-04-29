@@ -175,7 +175,7 @@ END;
         
         v_column_sql := udf_rpdo_column_sql_dev(
             v_patientset_sql,                                                   -- p_patientset_sql
-            v_tmp_row.c_columnname,                                             -- p_column_name
+            v_tmp_row.column_name,                                             -- p_column_name
             v_tmp_row.c_facttablecolumn,                                        -- p_c_facttablecolumn
             COALESCE(v_tmp_row.c_tablename, 'patient_dimension'),               -- p_c_tablename
             v_tmp_row.c_columnname,                                             -- p_c_columnname (literal)
@@ -232,7 +232,7 @@ END;
                    ' SELECT p.patient_num, ce.col, ce.val ' ||
                    ' FROM (' || v_patientset_sql || ') p ' ||
                    ' CROSS JOIN TMP_COLUMN_DEFINITIONS t ' ||
-                   ' LEFT JOIN TMP_RESULTS_TALL ce ON ce.col = t.c_columnname AND p.patient_num = ce.patient_num' ||
+                   ' LEFT JOIN TMP_RESULTS_TALL ce ON ce.col = t.column_name AND p.patient_num = ce.patient_num' ||
                    ') sub GROUP BY patient_num';
 
                    
