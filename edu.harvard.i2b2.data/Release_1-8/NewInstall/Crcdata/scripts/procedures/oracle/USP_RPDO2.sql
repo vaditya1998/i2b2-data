@@ -1,3 +1,34 @@
+/*
+################################################################################
+-- File:    usp_rpdo2.sql (Oracle version)
+-- Purpose: Oracle PL/SQL procedure to generate pivoted custom tables for I2B2
+--          query results, returning via REFCURSOR.
+--
+-- Invocation (SQL*Plus / SQL Developer):
+--   -- 1. Load the script:
+--      @/path/to/usp_rpdo2_oracle.sql
+--
+--   -- 2. Bind and call (for example):
+--      VAR rc REFCURSOR;
+--      EXEC usp_rpdo2(
+--        p_table_instance_id  => 322,
+--        p_result_instance_id => 1333,
+--        p_min_row            => 1,
+--        p_max_row            => 10,
+--        p_refcursor          => :rc
+--      );
+--
+--   -- 3. View results:
+--      PRINT rc;
+--
+-- Notes:
+--   - Uses a REF CURSOR OUT parameter named p_refcursor.
+--   - Temporary cursors live for the duration of your session.
+--
+-- © 2025 Massachusetts General Hospital
+################################################################################
+*/
+
 CREATE OR REPLACE PROCEDURE usp_rpdo2 (
     p_table_instance_id    IN  NUMBER,
     p_result_instance_id   IN  NUMBER DEFAULT NULL,

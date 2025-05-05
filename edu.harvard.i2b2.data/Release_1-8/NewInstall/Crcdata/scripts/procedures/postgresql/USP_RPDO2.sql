@@ -1,3 +1,39 @@
+/*
+################################################################################
+-- File:    usp_rpdo2.sql (Postgres version)
+-- Purpose: PL/pgSQL procedure to generate pivoted custom tables for I2B2 query
+--          results, returning via REF_CURSOR.
+--
+-- Invocation:
+--   -- 1. Load the script into your session:
+--       \i /path/to/usp_rpdo2_postgres.sql
+--
+--   -- 2. Call the proc (uses default cursor name 'cur' and example parameters):
+--       BEGIN;
+--         CALL usp_rpdo2(
+--           p_table_instance_id  => 322,
+--           p_result_instance_id => 1333,
+--           p_min_row            => 1,
+--           p_max_row            => 10
+--         );
+--         FETCH ALL FROM cur;
+--       COMMIT;
+--
+--   -- 3. (Optional) specify a custom cursor name:
+--       BEGIN;
+--         CALL usp_rpdo2(322, NULL, NULL, NULL, 'my_cursor');
+--         FETCH ALL FROM my_cursor;
+--       COMMIT;
+--
+-- Notes:
+--   - Defaults the INOUT cur REFCURSOR parameter to 'cur'.
+--   - Requires PostgreSQL 11+ (REFCURSOR support).
+--
+-- © 2025 Massachusetts General Hospital
+################################################################################
+*/
+
+
 CREATE OR REPLACE PROCEDURE usp_rpdo2(
     p_table_instance_id  INTEGER,
     p_result_instance_id INTEGER DEFAULT NULL,

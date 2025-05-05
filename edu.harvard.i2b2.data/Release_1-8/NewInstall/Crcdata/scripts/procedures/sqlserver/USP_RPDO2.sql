@@ -1,3 +1,26 @@
+/*
+################################################################################
+-- File:    usp_rpdo2.sql (MSSQL version)
+-- Purpose: T‑SQL stored procedure to generate pivoted custom tables for I2B2
+--          query results, returning directly in the result grid.
+--
+-- Invocation (SSMS / sqlcmd):
+--   -- 1. Load the script:
+--      :r C:\path\to\usp_rpdo2_mssql.sql
+--
+--   -- 2. Execute (for example):
+--      EXEC dbo.usp_rpdo2
+--        @TABLE_INSTANCE_ID  = 322,
+--        @RESULT_INSTANCE_ID = 1333,
+--        @MIN_ROW            = 1,
+--        @MAX_ROW            = 10;
+--      -- Results appear in the grid.
+--
+-- © 2025 Massachusetts General Hospital
+################################################################################
+*/
+
+
 create PROCEDURE [dbo].[usp_rpdo2]
 (
 	@TABLE_INSTANCE_ID INT,
