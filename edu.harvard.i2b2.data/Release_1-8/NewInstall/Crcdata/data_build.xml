@@ -78,6 +78,16 @@ $Id: data_build.xml,v 1.3 2010/05/23 20:21:51 rk903 Exp $
 			<transaction src="./scripts/procedures/${db.type}/INSERT_MODIFIER_FROMTEMP.sql" />
 			<transaction src="./scripts/procedures/${db.type}/SYNC_CLEAR_MODIFIER_TABLE.sql" />
 			<transaction src="./scripts/procedures/${db.type}/Insert_Concept_FROMTableAccess.sql" />
+			<transaction src="./scripts/procedures/${db.type}/USP_RPDO2.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_AGGREGATION_SQL.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_COLUMN_SQL.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_CONSTRAINT_SQL.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_CONSTRAINT_ONTOLOGY_SQL.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_PATIENTSET_SQL.sql"/>
+			<!--<transaction src="./scripts/procedures/${db.type}/RPDO_RPDO_COLUMN_SQL_INDEX.sql"/>
+			<transaction src="./scripts/procedures/${db.type}/RPDO_INDEXDATE_CONSTRAINT_SQL.sql"/>-->
+
+
 
   		</sql>
 	</target>
