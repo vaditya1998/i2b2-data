@@ -2,10 +2,10 @@ CREATE OR REPLACE PROCEDURE usp_rpdo2(
     p_table_instance_id  INTEGER,
     p_result_instance_id INTEGER DEFAULT NULL,
     p_min_row            INTEGER DEFAULT NULL,
-    p_max_row            INTEGER DEFAULT NULL
+    p_max_row            INTEGER DEFAULT NULL,
+    INOUT cur 			 REFCURSOR DEFAULT 'cur'
 ) AS $$
 DECLARE
-    cur refcursor;
     v_patientset_sql TEXT;
     v_set_index INTEGER := 0;
     v_max_set_index INTEGER;
@@ -238,15 +238,14 @@ END;
                    
     RAISE NOTICE 'usp_rpdo2: Final pivot SQL: %',v_pivot_sql;
 		-- Step: Drop the temp table if it already exists
-	EXECUTE 'DROP TABLE IF EXISTS tmp_pivot_results';
 
 	-- Step: Create temp table with dynamic pivot SQL
-	EXECUTE format('CREATE TEMP TABLE tmp_pivot_results AS %s', v_pivot_sql);
-    
-    --OPEN cur FOR EXECUTE v_pivot_sql;
+	--EXECUTE 'DROP TABLE IF EXISTS tmp_pivot_results';
+	--EXECUTE format('CREATE TEMP TABLE tmp_pivot_results AS %s', v_pivot_sql);
+
+    -- Return the cursor
+    OPEN cur FOR EXECUTE v_pivot_sql;
     --RETURN cur;
-	--EXECUTE format('CREATE TEMP TABLE my_table AS %s', v_pivot_sql);
-	--RETURN QUERY EXECUTE 'SELECT * FROM my_table';
 
 EXCEPTION
     WHEN OTHERS THEN
