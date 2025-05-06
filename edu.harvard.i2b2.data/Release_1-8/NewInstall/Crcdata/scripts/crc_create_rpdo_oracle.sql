@@ -66,6 +66,7 @@ CREATE TABLE RPDO_TABLE_REQUEST (
     CONSTRAIN_BY_INDEXDATE_FROM_DAYS   NUMBER,
     CONSTRAIN_BY_INDEXDATE_TO_DAYS     NUMBER,
     USE_AS_COHORT                      CHAR(1),
-    REQUIRED                           VARCHAR2(3)
+    REQUIRED                           VARCHAR2(3),
+    SHARED                             CHAR(1)
 );
 

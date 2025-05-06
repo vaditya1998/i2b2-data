@@ -31,7 +31,8 @@ create table RPDO_TABLE_REQUEST
     CONSTRAIN_BY_INDEXDATE_FROM_DAYS   int,
     CONSTRAIN_BY_INDEXDATE_TO_DAYS     int,
     USE_AS_COHORT                      char,
-    REQUIRED                           varchar(3)
+    REQUIRED                           varchar(3),
+    SHARED                             char
 )
 go
 
