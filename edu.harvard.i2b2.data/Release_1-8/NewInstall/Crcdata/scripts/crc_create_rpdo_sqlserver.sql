@@ -21,7 +21,7 @@ create table RPDO_TABLE_REQUEST
     CONSTRAIN_BY_VALUE_CONSTRAINT      varchar(1000),
     CONSTRAIN_BY_VALUE_UNIT_OF_MEASURE varchar(50),
     CONSTRAIN_BY_VALUE_TYPE            varchar(50),
-    CREATE_DATE                        datetime     not null,
+    CREATE_DATE                        datetime,
     DELETE_DATE                        datetime,
     UPDATE_DATE                        datetime,
     DELETE_FLAG                        varchar(3),

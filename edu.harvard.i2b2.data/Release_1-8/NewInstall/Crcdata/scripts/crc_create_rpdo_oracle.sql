@@ -56,7 +56,7 @@ CREATE TABLE RPDO_TABLE_REQUEST (
     CONSTRAIN_BY_VALUE_CONSTRAINT      VARCHAR2(1000),
     CONSTRAIN_BY_VALUE_UNIT_OF_MEASURE VARCHAR2(50),
     CONSTRAIN_BY_VALUE_TYPE            VARCHAR2(50),
-    CREATE_DATE                        DATE NOT NULL,
+    CREATE_DATE                        DATE,
     DELETE_DATE                        DATE,
     UPDATE_DATE                        DATE,
     DELETE_FLAG                        VARCHAR2(3),
