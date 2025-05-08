@@ -119,6 +119,53 @@ BEGIN
                              'FROM qt_patient_set_collection ' ||
                              'WHERE result_instance_id = ' || p_C_DIMCODE || ' ' ||
                              'AND patient_num IN (' || p_PATIENTSET_SQL || ')';
+
+    ELSIF p_AGG_TYPE IN ('MinDate','MaxDate') THEN
+		v_rpdo_column_sql :=
+		  'WITH t AS ( '||
+			'SELECT patient_num, START_DATE '||
+			'FROM '||v_facttable||' f '||
+			'WHERE patient_num IN ('||p_PATIENTSET_SQL||') '||
+			'  AND f.'||v_facttablecolumn||' IN ( '||
+			  'SELECT '||v_facttablecolumn||' FROM '||p_C_TABLENAME||
+			  ' WHERE '||v_ontology_constraint_sql||
+			')'||
+			v_constraint_sql||v_indexdate_constraint_sql||
+		  ') '||
+		  'SELECT DISTINCT '||
+			'patient_num, '||
+			'''' || p_COLUMN_NAME || ''' AS col, '||
+			'TO_CHAR('||
+			  CASE p_AGG_TYPE
+				WHEN 'MinDate' THEN 'MIN(START_DATE)'
+				ELSE               'MAX(START_DATE)'
+			  END ||
+			', ''YYYY-MM-DD'') AS val '||
+		  'FROM t '||
+		  'GROUP BY patient_num';
+      
+    ELSIF p_AGG_TYPE IN ( 
+     'NumEncounters',
+     'NumConcepts',
+     'NumDates',
+     'NumProviders',
+     'NumFacts'
+   )
+	THEN
+	  v_rpdo_column_sql :=
+		'WITH t AS ( '||
+		  'SELECT DISTINCT patient_num, encounter_num, concept_cd, start_date, provider_id, tval_char, nval_num '||
+		  'FROM ' || v_facttable || ' f '||
+		  'WHERE patient_num IN ('||p_PATIENTSET_SQL||') '||
+		  '  AND f.'||v_facttablecolumn||' IN ( '||
+			   'SELECT '||v_facttablecolumn||' FROM '||p_C_TABLENAME||
+			   ' WHERE '||v_ontology_constraint_sql||') '||
+		  v_constraint_sql||v_indexdate_constraint_sql||
+		') '||
+		'SELECT patient_num, '||
+		  '''' || p_COLUMN_NAME || ''' AS col, '||
+		  v_aggregation_sql || ' ';
+
     ELSE
         -- Normal table handling
         v_rpdo_column_sql := 'WITH t AS (SELECT DISTINCT patient_num, encounter_num, concept_cd, start_date, provider_id, tval_char, nval_num ' ||
