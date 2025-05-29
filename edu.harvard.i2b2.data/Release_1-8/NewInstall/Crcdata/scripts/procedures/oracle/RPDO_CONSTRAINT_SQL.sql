@@ -36,7 +36,7 @@ BEGIN
                           WHEN 'GE' THEN '>='
                           WHEN 'LT' THEN '<'
                           WHEN 'LE' THEN '<='
-                          ELSE '=' END;
+                          ELSE p_CONSTRAIN_BY_VALUE_OPERATOR END;
             v_SQLConstraint := v_SQLConstraint || ' AND NVAL_NUM ' || v_operator || ' ' || p_CONSTRAIN_BY_VALUE_CONSTRAINT;
         ELSIF p_CONSTRAIN_BY_VALUE_TYPE = 'ENUM' THEN
             IF p_CONSTRAIN_BY_VALUE_OPERATOR = 'IN' THEN
