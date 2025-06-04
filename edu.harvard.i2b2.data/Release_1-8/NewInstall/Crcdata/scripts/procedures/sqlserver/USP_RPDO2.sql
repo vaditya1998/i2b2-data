@@ -30,6 +30,7 @@ create PROCEDURE [dbo].[usp_rpdo2]
 )
 AS
 SET NOCOUNT ON
+BEGIN
 
 /*
 DECLARE
@@ -234,5 +235,5 @@ SET @pivot_sql='select patient_num, ' + @select_col + ' from (select patient_num
 --select @pivot_sql
 
 exec sp_executesql @pivot_sql
-go
+END
 
