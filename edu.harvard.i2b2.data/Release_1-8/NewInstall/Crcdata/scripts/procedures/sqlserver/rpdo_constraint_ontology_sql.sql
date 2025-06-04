@@ -1,3 +1,10 @@
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'udf_constraint_ontology_sql')
+                    AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE udf_constraint_ontology_sql
+;
+
 CREATE FUNCTION [dbo].[udf_constraint_ontology_sql] (
 	@C_OPERATOR VARCHAR(30),
 	@C_COLUMNNAME VARCHAR(30),

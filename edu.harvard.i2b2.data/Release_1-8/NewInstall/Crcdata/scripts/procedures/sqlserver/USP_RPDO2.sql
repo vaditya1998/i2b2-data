@@ -20,6 +20,12 @@
 ################################################################################
 */
 
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'USP_RPDO2')
+                    AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE USP_RPDO2
+;
 
 create PROCEDURE [dbo].[usp_rpdo2]
 (

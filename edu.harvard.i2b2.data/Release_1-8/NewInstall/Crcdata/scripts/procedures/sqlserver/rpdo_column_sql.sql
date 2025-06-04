@@ -1,3 +1,9 @@
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'udf_rpdo_column_sql_dev')
+                    AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE udf_rpdo_column_sql_dev
+;
 CREATE FUNCTION [dbo].[udf_rpdo_column_sql_dev]
 (
 	@PATIENTSET_SQL NVARCHAR(MAX),

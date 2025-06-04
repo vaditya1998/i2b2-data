@@ -1,3 +1,11 @@
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'udf_patientset_sql_dev')
+                    AND type IN ( N'P', N'PC' ) ) 
+DROP PROCEDURE udf_patientset_sql_dev
+;
+
+
 CREATE FUNCTION [dbo].[udf_patientset_sql_dev](
 	@RESULT_INSTANCE_ID INT = NULL,
 	@MIN_ROW INT = NULL,
