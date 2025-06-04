@@ -37,5 +37,4 @@ BEGIN
 	RETURN @SQLConstraint
 
 END
-go
 

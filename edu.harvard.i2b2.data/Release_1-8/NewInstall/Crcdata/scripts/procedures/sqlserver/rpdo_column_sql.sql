@@ -215,5 +215,4 @@ BEGIN
 	RETURN @rpdo_column_sql
 
 END
-go
 
