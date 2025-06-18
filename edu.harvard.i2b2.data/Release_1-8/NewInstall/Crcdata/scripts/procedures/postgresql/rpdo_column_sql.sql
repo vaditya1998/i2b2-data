@@ -70,7 +70,7 @@ BEGIN
 
         ELSE
             rpdo_column_sql := format(
-              'SELECT patient_num, %L AS col, %s AS val
+              'SELECT patient_num, %L AS col, (%s)::TEXT AS val
                FROM patient_dimension
                WHERE patient_num IN (%s)',
               column_name,
