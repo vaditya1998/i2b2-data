@@ -13,11 +13,11 @@ DECLARE
 BEGIN
     IF p_constrain_by_date_from IS NOT NULL AND trim(p_constrain_by_date_from) <> '' THEN
         v_sqlconstraint := v_sqlconstraint ||
-           ' AND DATE(START_DATE) >= TO_DATE(''' || p_constrain_by_date_from || ''',''MM/DD/YYYY HH24:MI'')';
+           ' AND DATE(START_DATE) >= TO_DATE(''' || p_constrain_by_date_from || ''',''YYYY-MM-DD HH24:MI'')';
     END IF;
     IF p_constrain_by_date_to IS NOT NULL AND trim(p_constrain_by_date_to) <> '' THEN
         v_sqlconstraint := v_sqlconstraint ||
-           ' AND DATE(START_DATE) <= TO_DATE(''' || p_constrain_by_date_to || ''',''MM/DD/YYYY HH24:MI'')';
+           ' AND DATE(START_DATE) <= TO_DATE(''' || p_constrain_by_date_to || ''',''YYYY-MM-DD HH24:MI'')';
     END IF;
     IF p_c_tablename = 'concept_dimension' THEN
         IF upper(p_constrain_by_value_type) = 'NUMBER' THEN

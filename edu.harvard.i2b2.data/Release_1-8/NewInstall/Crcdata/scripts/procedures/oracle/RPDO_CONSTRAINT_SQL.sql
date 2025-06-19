@@ -71,5 +71,5 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in udf_constraint_sql: ' || SQLERRM);
         RETURN '';
 END;
-/
+
 

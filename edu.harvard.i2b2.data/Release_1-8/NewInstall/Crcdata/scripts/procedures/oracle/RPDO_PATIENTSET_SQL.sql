@@ -105,5 +105,5 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in udf_patientset_sql_dev: ' || SQLERRM);
         RETURN NULL;
 END;
-/
+
 
