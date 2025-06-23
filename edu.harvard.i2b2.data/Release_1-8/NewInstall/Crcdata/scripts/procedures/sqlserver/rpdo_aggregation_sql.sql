@@ -1,9 +1,10 @@
 IF EXISTS ( SELECT  *
             FROM    sys.objects
             WHERE   object_id = OBJECT_ID(N'udf_aggregation_sql')
-                    AND type IN ( N'P', N'PC' ) ) 
-DROP PROCEDURE udf_aggregation_sql
+                    AND type IN (N'FN', N'IF', N'TF', N'FS', N'FT') ) 
+DROP FUNCTION udf_aggregation_sql
 ;
+
 
 CREATE FUNCTION [dbo].[udf_aggregation_sql]
 (
