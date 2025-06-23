@@ -204,7 +204,7 @@ BEGIN
     -- 6) Build the pivot SQL and open the cursor
     SELECT LISTAGG(
              '''' || col || ''' AS "' ||
-             SUBSTR(REGEXP_REPLACE(col, '[^A-Za-z0-9_]', '_'), 1, 30) || '"'
+             SUBSTR(REGEXP_REPLACE(col, '[^A-Za-z0-9_]', '_'), 1, 128) || '"'
            , ',')
            WITHIN GROUP (ORDER BY col)
       INTO v_pivot_cols
