@@ -1,4 +1,4 @@
-CREATE FUNCTION [dbo].[udf_patientset_sql_dev](
+CREATE FUNCTION [dbo].[udf_patientset_sql](
 	@RESULT_INSTANCE_ID INT = NULL,
 	@MIN_ROW INT = NULL,
 	@MAX_ROW INT = NULL,

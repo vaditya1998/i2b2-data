@@ -1,4 +1,4 @@
-CREATE FUNCTION [dbo].[udf_rpdo_column_sql_dev]
+CREATE FUNCTION [dbo].[udf_rpdo_column_sql]
 (
 	@PATIENTSET_SQL NVARCHAR(MAX),
 

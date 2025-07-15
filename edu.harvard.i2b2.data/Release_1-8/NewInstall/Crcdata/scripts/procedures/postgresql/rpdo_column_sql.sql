@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION udf_rpdo_column_sql_dev(
+CREATE OR REPLACE FUNCTION udf_rpdo_column_sql(
     patient_set_sql                    TEXT,
     column_name                        TEXT,
     c_facttablecolumn                  TEXT,

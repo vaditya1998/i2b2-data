@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION udf_patientset_sql_dev(
+CREATE OR REPLACE FUNCTION udf_patientset_sql(
     p_result_instance_id INTEGER DEFAULT NULL,
     p_min_row            INTEGER DEFAULT NULL,
     p_max_row            INTEGER DEFAULT NULL,

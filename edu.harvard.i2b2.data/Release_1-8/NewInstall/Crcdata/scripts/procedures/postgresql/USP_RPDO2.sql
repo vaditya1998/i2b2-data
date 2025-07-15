@@ -153,22 +153,22 @@ END;
     WHERE TABLE_INSTANCE_ID = p_table_instance_id
     ORDER BY SET_INDEX;
     
-    -- Get patient set SQL from udf_patientset_sql_dev
-    v_patientset_sql := udf_patientset_sql_dev(p_result_instance_id, p_min_row, p_max_row, p_table_instance_id);
+    -- Get patient set SQL from udf_patientset_sql
+    v_patientset_sql := udf_patientset_sql(p_result_instance_id, p_min_row, p_max_row, p_table_instance_id);
     
     -- Determine maximum SET_INDEX
     SELECT COALESCE(MAX(SET_INDEX), 0) INTO v_max_set_index FROM TMP_COLUMN_DEFINITIONS;
     
-    -- Loop over each SET_INDEX and build column SQL via udf_rpdo_column_sql_dev
+    -- Loop over each SET_INDEX and build column SQL via udf_rpdo_column_sql
     FOR v_tmp_row IN SELECT * FROM TMP_COLUMN_DEFINITIONS ORDER BY set_index LOOP
-    -- Call column_sql_dev with v_tmp_row fields
+    -- Call column_sql with v_tmp_row fields
 
 
     /*WHILE v_set_index <= v_max_set_index LOOP
         SELECT * INTO v_tmp_row FROM TMP_COLUMN_DEFINITIONS WHERE SET_INDEX = v_set_index;*/
         
         -- Print debugging information
-        RAISE NOTICE E'Calling udf_rpdo_column_sql_dev with:\n
+        RAISE NOTICE E'Calling udf_rpdo_column_sql with:\n
   p_patientset_sql: %\n
   p_column_name: %\n
   p_c_facttablecolumn: %\n
@@ -209,7 +209,7 @@ END;
   v_tmp_row.constrain_by_indexdate_to_days;
 
         
-        v_column_sql := udf_rpdo_column_sql_dev(
+        v_column_sql := udf_rpdo_column_sql(
             v_patientset_sql,                                                   -- p_patientset_sql
             v_tmp_row.column_name,                                             -- p_column_name
             v_tmp_row.c_facttablecolumn,                                        -- p_c_facttablecolumn

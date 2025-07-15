@@ -99,7 +99,7 @@ BEGIN
     WHERE table_instance_id = p_table_instance_id;
 
     -- 3) Build the patient‐set SQL
-    v_patientset_sql := udf_patientset_sql_dev(
+    v_patientset_sql := udf_patientset_sql(
       p_RESULT_INSTANCE_ID   => p_result_instance_id,
       p_MIN_ROW              => p_min_row,
       p_MAX_ROW              => p_max_row,
@@ -163,7 +163,7 @@ BEGIN
 
       IF v_c_tablename IS NOT NULL THEN
         -- generate the per‐column SQL
-        v_column_sql := udf_rpdo_column_sql_dev(
+        v_column_sql := udf_rpdo_column_sql(
           p_patientset_sql                    => v_patientset_sql,
           p_column_name                       => v_column_name,
           p_c_facttablecolumn                 => v_c_facttablecolumn,
