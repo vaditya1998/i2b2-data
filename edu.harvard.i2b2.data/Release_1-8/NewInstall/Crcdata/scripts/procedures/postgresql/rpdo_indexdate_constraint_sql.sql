@@ -8,4 +8,5 @@ BEGIN
     -- This function is a stub. Implement the logic as required.
     RETURN '';
 END;
-$$body$ LANGUAGE plpgsql;
+$$body$ 
+LANGUAGE plpgsql;
