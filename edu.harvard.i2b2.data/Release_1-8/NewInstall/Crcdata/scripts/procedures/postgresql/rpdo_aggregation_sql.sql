@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION udf_aggregation_sql(p_agg_type TEXT)
-RETURNS TEXT AS $$
+RETURNS TEXT AS $body$
 DECLARE
     v_aggregation_sql TEXT;
 BEGIN
@@ -94,4 +94,5 @@ EXCEPTION
     WHEN OTHERS THEN
         RETURN '';
 END;
-$$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;
