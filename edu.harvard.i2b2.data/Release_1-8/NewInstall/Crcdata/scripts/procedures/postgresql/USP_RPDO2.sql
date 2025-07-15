@@ -40,7 +40,7 @@ CREATE OR REPLACE PROCEDURE usp_rpdo2(
     p_min_row            INTEGER DEFAULT NULL,
     p_max_row            INTEGER DEFAULT NULL,
     INOUT cur 			 REFCURSOR DEFAULT 'cur'
-) AS $$
+) AS $body$
 DECLARE
     v_patientset_sql TEXT;
     v_set_index INTEGER := 0;
@@ -287,4 +287,5 @@ EXCEPTION
     WHEN OTHERS THEN
         RAISE;
 END;
-$$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;
