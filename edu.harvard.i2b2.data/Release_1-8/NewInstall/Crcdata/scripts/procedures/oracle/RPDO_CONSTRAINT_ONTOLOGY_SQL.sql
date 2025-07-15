@@ -13,17 +13,17 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Datatype: ' || p_C_COLUMNDATATYPE);
     DBMS_OUTPUT.PUT_LINE('Dimcode: ' || p_C_DIMCODE);
 
-    IF p_C_OPERATOR = 'LIKE' THEN
+    IF UPPER(p_C_OPERATOR) = 'LIKE' THEN
         v_SQLConstraint := p_C_COLUMNNAME || ' LIKE ''' || REPLACE(p_C_DIMCODE, '''', '''''') || '%''';
 
-    ELSIF p_C_OPERATOR IN ('>', '>=', '=', '<>', '<', '<=', 'BETWEEN') THEN
+    ELSIF UPPER(p_C_OPERATOR) IN ('>', '>=', '=', '<>', '<', '<=', 'BETWEEN') THEN
         IF p_C_COLUMNDATATYPE = 'N' THEN
             v_SQLConstraint := p_C_COLUMNNAME || ' ' || p_C_OPERATOR || ' ' || p_C_DIMCODE;
         ELSE
             v_SQLConstraint := p_C_COLUMNNAME || ' ' || p_C_OPERATOR || ' ''' || REPLACE(p_C_DIMCODE, '''', '''''') || '''';
         END IF;
 
-    ELSIF p_C_OPERATOR = 'IN' THEN
+    ELSIF UPPER(p_C_OPERATOR) = 'IN' THEN
         v_SQLConstraint := p_C_COLUMNNAME || ' IN (' || p_C_DIMCODE || ')';
     ELSE
         v_SQLConstraint := '-- Unsupported operator: ' || p_C_OPERATOR;
