@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION udf_rpdo_column_sql_dev(
     constrain_by_indexdate_to_days     INTEGER DEFAULT NULL
 ) RETURNS TEXT
   LANGUAGE plpgsql
-AS $$
+AS $body$
 DECLARE
     constraint_sql           TEXT;
     indexdate_constraint_sql TEXT := '';
@@ -220,4 +220,4 @@ BEGIN
 
     RETURN rpdo_column_sql;
 END;
-$$;
+$$body$;
