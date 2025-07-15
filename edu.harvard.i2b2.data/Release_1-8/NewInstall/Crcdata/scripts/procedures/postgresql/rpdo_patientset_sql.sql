@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION udf_patientset_sql_dev(
     p_min_row            INTEGER DEFAULT NULL,
     p_max_row            INTEGER DEFAULT NULL,
     p_table_instance_id  INTEGER DEFAULT NULL
-) RETURNS TEXT AS $$
+) RETURNS TEXT AS $body$
 DECLARE
     v_patientset_sql TEXT := '';
 BEGIN
@@ -110,4 +110,4 @@ BEGIN
     END IF;
     RETURN v_patientset_sql;
 END;
-$$ LANGUAGE plpgsql;
+$$body$ LANGUAGE plpgsql;
