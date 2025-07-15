@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION udf_constraint_sql(
     p_constrain_by_value_constraint      TEXT,
     p_constrain_by_value_unit_of_measure TEXT,
     p_constrain_by_value_type            TEXT
-) RETURNS TEXT AS $$
+) RETURNS TEXT AS $body$
 DECLARE
     v_sqlconstraint TEXT := '';
     v_operator TEXT := p_constrain_by_value_operator;
@@ -76,4 +76,4 @@ EXCEPTION
     WHEN OTHERS THEN
         RETURN NULL;
 END;
-$$ LANGUAGE plpgsql;
+$$body$ LANGUAGE plpgsql;
