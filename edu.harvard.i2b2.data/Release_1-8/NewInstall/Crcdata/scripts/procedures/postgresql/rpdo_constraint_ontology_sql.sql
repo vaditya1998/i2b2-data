@@ -25,4 +25,5 @@ EXCEPTION
     WHEN OTHERS THEN
         RETURN NULL;
 END;
-$$body$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;
