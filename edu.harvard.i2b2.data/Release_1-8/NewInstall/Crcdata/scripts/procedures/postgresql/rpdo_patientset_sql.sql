@@ -110,4 +110,5 @@ BEGIN
     END IF;
     RETURN v_patientset_sql;
 END;
-$$body$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;
