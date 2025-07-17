@@ -96,7 +96,8 @@ BEGIN
       constrain_by_indexdate_to_days,
       use_as_cohort
     FROM rpdo_table_request
-    WHERE table_instance_id = p_table_instance_id;
+    WHERE table_instance_id = p_table_instance_id
+    AND delete_flag = 'N';
 
     -- 3) Build the patient‐set SQL
     v_patientset_sql := udf_patientset_sql(

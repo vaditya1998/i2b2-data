@@ -19,6 +19,7 @@ IS
         FROM RPDO_TABLE_REQUEST
         WHERE USE_AS_COHORT = 'Y'
           AND TABLE_INSTANCE_ID = p_TABLE_INSTANCE_ID
+          AND DELETE_FLAG = 'N'
         ORDER BY SET_INDEX;
 BEGIN
     DBMS_OUTPUT.PUT_LINE('>>> udf_patientset_sql called.');
