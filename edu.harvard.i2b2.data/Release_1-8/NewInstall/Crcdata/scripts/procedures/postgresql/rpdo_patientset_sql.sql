@@ -51,7 +51,7 @@ BEGIN
               FROM RPDO_TABLE_REQUEST
               WHERE USE_AS_COHORT = 'Y'
                 AND TABLE_INSTANCE_ID = p_table_instance_id
-                AND DELETE_FLAG = 'N'
+                AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A_' 
               ORDER BY SET_INDEX
             LOOP
                 v_c_tablename := rec.c_tablename;
