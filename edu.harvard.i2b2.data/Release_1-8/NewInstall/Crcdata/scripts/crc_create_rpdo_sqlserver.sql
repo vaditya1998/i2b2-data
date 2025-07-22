@@ -33,7 +33,7 @@ create table RPDO_TABLE_REQUEST
     USE_AS_COHORT                      char,
     REQUIRED                           varchar(3),
     SHARED                             char,
-    C_VISUALATTRIBUTES 				   char(3)
+    C_VISUALATTRIBUTES 				   CHAR(3) NOT NULL DEFAULT 'LA'
 );
 
 
