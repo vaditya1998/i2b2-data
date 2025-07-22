@@ -1,3 +1,14 @@
+--==============================================================
+-- POSTGRES Database Script to upgrade PM from 1.8.1 to 1.8.2  
+-- This adds a periodic archiving of pm_user_session to improve performance.                
+--==============================================================
+
+CREATE TABLE pm_user_session_arc 
+    (LIKE pm_user_session INCLUDING ALL);
+
+ALTER TABLE pm_user_session_arc
+    ADD COLUMN archived_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
+    
 /* ===============================================================
    Trigger : trg_prune_pm_user_session
    Purpose : Archive & prune pm_user_session (keep 100 newest)
