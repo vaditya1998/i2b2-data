@@ -135,5 +135,4 @@ BEGIN
 	RETURN @aggregation_sql
 
 END
-go
 

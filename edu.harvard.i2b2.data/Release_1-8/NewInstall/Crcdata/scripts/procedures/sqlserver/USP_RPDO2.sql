@@ -235,5 +235,4 @@ SET @pivot_sql='select patient_num, ' + @select_col + ' from (select patient_num
 --select @pivot_sql
 
 exec sp_executesql @pivot_sql
-go
 

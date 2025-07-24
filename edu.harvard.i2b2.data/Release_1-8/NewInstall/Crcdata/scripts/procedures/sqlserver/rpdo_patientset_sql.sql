@@ -141,5 +141,4 @@ BEGIN
 	RETURN @patientset_sql
 
 END
-go
 

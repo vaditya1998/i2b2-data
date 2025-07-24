@@ -100,5 +100,5 @@ IF @C_TABLENAME = 'concept_dimension'
 RETURN @SQLConstraint
 
 END
-go
+
 
