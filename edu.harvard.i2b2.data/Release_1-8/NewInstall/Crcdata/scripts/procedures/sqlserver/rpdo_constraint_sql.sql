@@ -1,3 +1,10 @@
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'udf_constraint_sql')
+                    AND type IN ( N'FN', N'IF', N'TF', N'FS' ) )
+DROP FUNCTION udf_constraint_sql
+;
+
 CREATE FUNCTION [dbo].[udf_constraint_sql]
 (
 	@C_TABLENAME NVARCHAR(100),

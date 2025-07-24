@@ -1,3 +1,10 @@
+IF EXISTS ( SELECT  *
+            FROM    sys.objects
+            WHERE   object_id = OBJECT_ID(N'udf_patientset_sql')
+                    AND type IN ( N'FN', N'IF', N'TF', N'FS' ) )
+DROP FUNCTION udf_patientset_sql
+;
+
 CREATE FUNCTION [dbo].[udf_patientset_sql](
 	@RESULT_INSTANCE_ID INT = NULL,
 	@MIN_ROW INT = NULL,
