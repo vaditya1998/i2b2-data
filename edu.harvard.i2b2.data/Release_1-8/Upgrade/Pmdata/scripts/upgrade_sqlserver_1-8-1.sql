@@ -2,7 +2,7 @@
 -- SQLSERVER Database Script to upgrade PM from 1.8.1 to 1.8.2  
 -- This adds a periodic archiving of pm_user_session to improve performance.                
 --==============================================================
-SELECT TOP 0
+SELECT
        USER_ID,
        SESSION_ID,
        EXPIRED_DATE,
@@ -19,6 +19,7 @@ ALTER TABLE PM_USER_SESSION_ARC
 ALTER TABLE PM_USER_SESSION_ARC
   ADD CONSTRAINT PK_PM_USER_SESSION_ARC
       PRIMARY KEY (SESSION_ID, USER_ID);
+TRUNCATE TABLE pm_user_session;
 
 /* ===============================================================
    Trigger : trg_prune_pm_user_session

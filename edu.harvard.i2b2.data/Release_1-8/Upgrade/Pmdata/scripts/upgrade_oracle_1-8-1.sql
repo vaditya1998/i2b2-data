@@ -12,8 +12,7 @@ SELECT USER_ID,
        CHANGEBY_CHAR,
        STATUS_CD,
        CAST(NULL AS DATE) AS archived_at
-FROM   pm_user_session
-WHERE  1 = 0;
+FROM   pm_user_session;
 
 ALTER TABLE pm_user_session_arc
   ADD CONSTRAINT pm_user_session_arc_pk
@@ -22,6 +21,7 @@ ALTER TABLE pm_user_session_arc
 ALTER TABLE pm_user_session_arc
   MODIFY archived_at DATE DEFAULT SYSDATE NOT NULL;
   
+TRUNCATE TABLE pm_user_session;
 
 /* ============================================================
    Trigger : trg_prune_pm_user_session

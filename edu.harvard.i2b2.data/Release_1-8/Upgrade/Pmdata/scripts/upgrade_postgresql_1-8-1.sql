@@ -3,11 +3,17 @@
 -- This adds a periodic archiving of pm_user_session to improve performance.                
 --==============================================================
 
-CREATE TABLE pm_user_session_arc 
-    (LIKE pm_user_session INCLUDING ALL);
+CREATE TABLE pm_user_session_arc AS
+SELECT * FROM pm_user_session;
 
 ALTER TABLE pm_user_session_arc
     ADD COLUMN archived_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
+    
+ALTER TABLE pm_user_session_arc
+ADD CONSTRAINT PK_pm_user_session_arc PRIMARY KEY (SESSION_ID, USER_ID);
+
+TRUNCATE TABLE pm_user_session;
+
     
 /* ===============================================================
    Trigger : trg_prune_pm_user_session
