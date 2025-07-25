@@ -151,7 +151,7 @@ END;
         USE_AS_COHORT
     FROM RPDO_TABLE_REQUEST
     WHERE TABLE_INSTANCE_ID = p_table_instance_id
-    AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A_' 
+    AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%' 
     ORDER BY SET_INDEX;
     
     -- Get patient set SQL from udf_patientset_sql

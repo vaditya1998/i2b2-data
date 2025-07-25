@@ -97,7 +97,7 @@ BEGIN
       use_as_cohort
     FROM rpdo_table_request
     WHERE table_instance_id = p_table_instance_id
-    AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A_' ;
+    AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%' ;
 
     -- 3) Build the patient‐set SQL
     v_patientset_sql := udf_patientset_sql(
