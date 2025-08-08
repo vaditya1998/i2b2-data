@@ -1,7 +1,7 @@
 IF EXISTS ( SELECT  *
             FROM    sys.objects
             WHERE   object_id = OBJECT_ID(N'udf_constraint_ontology_sql')
-                    AND type IN (N'FN', N'IF', N'TF', N'FS', N'FT') ) 
+                    AND type IN ( N'FN', N'IF', N'TF', N'FS' ) )
 DROP FUNCTION udf_constraint_ontology_sql
 ;
 
@@ -37,4 +37,5 @@ BEGIN
 	RETURN @SQLConstraint
 
 END
+
 

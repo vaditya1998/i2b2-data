@@ -10,6 +10,7 @@ create or replace FUNCTION udf_constraint_sql (
 IS
     v_SQLConstraint CLOB := '';
     v_operator      VARCHAR2(20);
+    v_CONSTRAIN_BY_VALUE_CONSTRAINT VARCHAR2(300);
 BEGIN
     DBMS_OUTPUT.PUT_LINE('--- udf_constraint_sql called ---');
     DBMS_OUTPUT.PUT_LINE('C_TABLENAME = ' || NVL(p_C_TABLENAME, '<NULL>'));
@@ -45,21 +46,32 @@ BEGIN
                 v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR = ''' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '''';
             END IF;
         ELSIF p_CONSTRAIN_BY_VALUE_TYPE = 'TEXT' THEN
+        
+			v_CONSTRAIN_BY_VALUE_CONSTRAINT := REPLACE(
+				REPLACE(
+					REPLACE(
+						REPLACE(
+							REPLACE(p_CONSTRAIN_BY_VALUE_CONSTRAINT,
+									'''',    ''''''),   -- ' → ''
+									'\',    '\\' ),      -- \ → \\
+							'%',    '\%' ),        -- % → \%
+						'_',    '\_' ),          -- _ → \_
+					'[',    '\[' );            -- [ → \[
             v_operator := NVL(p_CONSTRAIN_BY_VALUE_OPERATOR, 'LIKE[contains]');
             IF v_operator = 'LIKE[exact]' THEN
-                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''%' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '%''';
+			    v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR = ''' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || ''''; -- Changed to '=' for exact match
             ELSIF v_operator = 'LIKE[begin]' THEN
-                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '%''';
+                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || '%''';
             ELSIF v_operator = 'LIKE[end]' THEN
-                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''%' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '''';
+                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''%' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || '''';
             ELSIF v_operator = 'LIKE[contains]' THEN
-                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''%' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '%''';
+                v_SQLConstraint := v_SQLConstraint || ' AND TVAL_CHAR LIKE ''%' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || '%''';
             END IF;
         ELSIF p_CONSTRAIN_BY_VALUE_TYPE = 'FLAG' THEN
-            v_SQLConstraint := v_SQLConstraint || ' AND VALUEFLAG_CD = ''' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || '''';
+            v_SQLConstraint := v_SQLConstraint || ' AND VALUEFLAG_CD = ''' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || '''';
         ELSIF p_CONSTRAIN_BY_VALUE_TYPE = 'LARGETEXT' THEN
             IF p_CONSTRAIN_BY_VALUE_OPERATOR = 'CONTAINS' THEN
-                v_SQLConstraint := v_SQLConstraint || ' AND CONTAINS(OBSERVATION_BLOB, ''' || p_CONSTRAIN_BY_VALUE_CONSTRAINT || ''') > 0';
+                v_SQLConstraint := v_SQLConstraint || ' AND CONTAINS(OBSERVATION_BLOB, ''' || v_CONSTRAIN_BY_VALUE_CONSTRAINT || ''') > 0';
             END IF;
         END IF;
     END IF;

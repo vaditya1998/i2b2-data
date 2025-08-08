@@ -1,9 +1,9 @@
-CREATE OR REPLACE FUNCTION udf_patientset_sql_dev(
+CREATE OR REPLACE FUNCTION udf_patientset_sql(
     p_result_instance_id INTEGER DEFAULT NULL,
     p_min_row            INTEGER DEFAULT NULL,
     p_max_row            INTEGER DEFAULT NULL,
     p_table_instance_id  INTEGER DEFAULT NULL
-) RETURNS TEXT AS $$
+) RETURNS TEXT AS $body$
 DECLARE
     v_patientset_sql TEXT := '';
 BEGIN
@@ -51,6 +51,7 @@ BEGIN
               FROM RPDO_TABLE_REQUEST
               WHERE USE_AS_COHORT = 'Y'
                 AND TABLE_INSTANCE_ID = p_table_instance_id
+                AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%' 
               ORDER BY SET_INDEX
             LOOP
                 v_c_tablename := rec.c_tablename;
@@ -110,4 +111,5 @@ BEGIN
     END IF;
     RETURN v_patientset_sql;
 END;
-$$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;

@@ -1,12 +1,11 @@
 IF EXISTS ( SELECT  *
             FROM    sys.objects
-            WHERE   object_id = OBJECT_ID(N'udf_patientset_sql_dev')
-                    AND type IN (N'FN', N'IF', N'TF', N'FS', N'FT') ) 
-DROP FUNCTION udf_patientset_sql_dev
+            WHERE   object_id = OBJECT_ID(N'udf_patientset_sql')
+                    AND type IN ( N'FN', N'IF', N'TF', N'FS' ) )
+DROP FUNCTION udf_patientset_sql
 ;
 
-
-CREATE FUNCTION [dbo].[udf_patientset_sql_dev](
+CREATE FUNCTION [dbo].[udf_patientset_sql](
 	@RESULT_INSTANCE_ID INT = NULL,
 	@MIN_ROW INT = NULL,
 	@MAX_ROW INT = NULL,
@@ -74,7 +73,7 @@ BEGIN
 				[CONSTRAIN_BY_DATE_TO], [CONSTRAIN_BY_DATE_FROM], [CONSTRAIN_BY_VALUE_OPERATOR], [CONSTRAIN_BY_VALUE_CONSTRAINT],
 				[CONSTRAIN_BY_VALUE_UNIT_OF_MEASURE], [CONSTRAIN_BY_VALUE_TYPE],
 				ROW_NUMBER() OVER (ORDER BY SET_INDEX) COHORT_INDEX
-		from RPDO_TABLE_REQUEST where USE_AS_COHORT = 'Y' AND TABLE_INSTANCE_ID = @TABLE_INSTANCE_ID
+		from RPDO_TABLE_REQUEST where USE_AS_COHORT = 'Y' AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%'  AND TABLE_INSTANCE_ID = @TABLE_INSTANCE_ID
 
 		SELECT	@COHORT_COL_INDEX=1,
 				@MAX_COHORT_COL_INDEX=(SELECT MAX(COHORT_INDEX) FROM @cohort_col)

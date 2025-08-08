@@ -75,6 +75,7 @@ SELECT
 INTO #column_definitions
 FROM RPDO_TABLE_REQUEST
 WHERE TABLE_INSTANCE_ID = @TABLE_INSTANCE_ID
+AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%' 
 ORDER BY SET_INDEX
 
 
@@ -104,7 +105,7 @@ DECLARE
 DECLARE @patientset_sql NVARCHAR(MAX) = ''
 
 -- First construct patient set sql to pass to all columns
-exec @patientset_sql = dbo.udf_patientset_sql_dev
+exec @patientset_sql = dbo.udf_patientset_sql
 	@RESULT_INSTANCE_ID = @RESULT_INSTANCE_ID,
 	@MIN_ROW = @MIN_ROW,
 	@MAX_ROW = @MAX_ROW,
@@ -162,7 +163,7 @@ BEGIN
 	WHERE SET_INDEX = @SET_INDEX
 
 	exec @column_sql =
-		dbo.udf_rpdo_column_sql_dev
+		dbo.udf_rpdo_column_sql
 		@PATIENTSET_SQL = @patientset_sql,
 
 		@COLUMN_NAME = @COLUMN_NAME,

@@ -1,4 +1,4 @@
-create or replace FUNCTION udf_patientset_sql_dev(
+create or replace FUNCTION udf_patientset_sql(
     p_RESULT_INSTANCE_ID IN NUMBER DEFAULT NULL,
     p_MIN_ROW            IN NUMBER DEFAULT NULL,
     p_MAX_ROW            IN NUMBER DEFAULT NULL,
@@ -19,9 +19,10 @@ IS
         FROM RPDO_TABLE_REQUEST
         WHERE USE_AS_COHORT = 'Y'
           AND TABLE_INSTANCE_ID = p_TABLE_INSTANCE_ID
+          AND DELETE_FLAG = 'N' AND C_VISUALATTRIBUTES LIKE '_A%'
         ORDER BY SET_INDEX;
 BEGIN
-    DBMS_OUTPUT.PUT_LINE('>>> udf_patientset_sql_dev called.');
+    DBMS_OUTPUT.PUT_LINE('>>> udf_patientset_sql called.');
 
     IF p_RESULT_INSTANCE_ID IS NULL THEN
         v_patientset_sql := 'SELECT PATIENT_NUM FROM (SELECT PATIENT_NUM, ROW_NUMBER() OVER (ORDER BY PATIENT_NUM) SET_INDEX FROM PATIENT_DIMENSION) WHERE 1=1';
@@ -102,7 +103,7 @@ BEGIN
     RETURN v_patientset_sql;
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Error in udf_patientset_sql_dev: ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Error in udf_patientset_sql: ' || SQLERRM);
         RETURN NULL;
 END;
 

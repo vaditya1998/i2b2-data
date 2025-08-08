@@ -1,4 +1,4 @@
-create or replace FUNCTION udf_rpdo_column_sql_dev (
+create or replace FUNCTION udf_rpdo_column_sql (
     p_PATIENTSET_SQL                    IN CLOB,
     p_COLUMN_NAME                       IN VARCHAR2,
     p_C_FACTTABLECOLUMN                 IN VARCHAR2,
@@ -29,7 +29,7 @@ IS
     v_facttablecolumn      VARCHAR2(100) := p_C_FACTTABLECOLUMN;
     v_operator             VARCHAR2(30) := NVL(TRIM(p_C_OPERATOR), '=');
 BEGIN
-    DBMS_OUTPUT.PUT_LINE('>>> udf_rpdo_column_sql_dev called with AGG_TYPE=' || NVL(p_AGG_TYPE, '<NULL>'));
+    DBMS_OUTPUT.PUT_LINE('>>> udf_rpdo_column_sql called with AGG_TYPE=' || NVL(p_AGG_TYPE, '<NULL>'));
 
     IF p_C_TABLENAME IS NULL OR TRIM(p_C_TABLENAME) IS NULL THEN
         DBMS_OUTPUT.PUT_LINE('>>> Skipping due to missing C_TABLENAME');
@@ -182,10 +182,10 @@ BEGIN
     RETURN v_rpdo_column_sql;
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        DBMS_OUTPUT.PUT_LINE('>>> NO DATA FOUND in udf_rpdo_column_sql_dev');
+        DBMS_OUTPUT.PUT_LINE('>>> NO DATA FOUND in udf_rpdo_column_sql');
         RETURN NULL;
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Error in udf_rpdo_column_sql_dev: ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Error in udf_rpdo_column_sql: ' || SQLERRM);
         RETURN NULL;
 END;
 

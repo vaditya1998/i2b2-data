@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION udf_constraint_ontology_sql(
     p_c_columnname     TEXT,
     p_c_columndatatype TEXT,
     p_c_dimcode        TEXT
-) RETURNS TEXT AS $$
+) RETURNS TEXT AS $body$
 DECLARE
     v_sqlconstraint TEXT := '';
 BEGIN
@@ -25,4 +25,5 @@ EXCEPTION
     WHEN OTHERS THEN
         RETURN NULL;
 END;
-$$ LANGUAGE plpgsql;
+$$body$
+LANGUAGE plpgsql;
