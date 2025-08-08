@@ -74,20 +74,37 @@ IF @C_TABLENAME = 'concept_dimension'
 		--Text constraints
 		IF @CONSTRAIN_BY_VALUE_TYPE = 'TEXT'
 		BEGIN
+		
+			SET @CONSTRAIN_BY_VALUE_CONSTRAINT = REPLACE(
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE(@CONSTRAIN_BY_VALUE_CONSTRAINT, '''', ''''''),
+									'\', '\\'
+								),
+								'%', '\%'
+							),
+							'_', '\_'
+						),
+						'[', '\['
+					);
+		
 			IF @CONSTRAIN_BY_VALUE_OPERATOR = 'IN' --Multi select
 				SELECT @SQLConstraint += ' AND TVAL_CHAR ' + @CONSTRAIN_BY_VALUE_OPERATOR + ' (' +@SQLConstraint + ')'
 
 			IF @CONSTRAIN_BY_VALUE_OPERATOR = 'LIKE[exact]' --wildcard at the beginning and end of value being constrained
-				SELECT @SQLConstraint += ' AND TVAL_CHAR LIKE, ''%'+@CONSTRAIN_BY_VALUE_CONSTRAINT+'%'''
-
+				SELECT @SQLConstraint +=  ' AND tval_char = ''' + @CONSTRAIN_BY_VALUE_CONSTRAINT + ''''
+				--' AND TVAL_CHAR LIKE ''%'+@CONSTRAIN_BY_VALUE_CONSTRAINT+'%'''
+ 
 			IF @CONSTRAIN_BY_VALUE_OPERATOR = 'LIKE[begin]'
-				SELECT @SQLConstraint += ' AND TVAL_CHAR LIKE, ''%'+@CONSTRAIN_BY_VALUE_CONSTRAINT+''''
-
+				SELECT @SQLConstraint += ' AND TVAL_CHAR LIKE ''' +@CONSTRAIN_BY_VALUE_CONSTRAINT+'%'''
+ 
 			IF @CONSTRAIN_BY_VALUE_OPERATOR = 'LIKE[end]'
-				SELECT @SQLConstraint += ' AND TVAL_CHAR LIKE, '''+@CONSTRAIN_BY_VALUE_CONSTRAINT+'%'''
-
+				SELECT @SQLConstraint += ' AND TVAL_CHAR LIKE ''%' +@CONSTRAIN_BY_VALUE_CONSTRAINT+ ''''
+ 
 			IF @CONSTRAIN_BY_VALUE_OPERATOR = 'LIKE[contains]'
-				SELECT @SQLConstraint += ' AND CONTAINS(OBSERVATION_BLOB, ''' +@CONSTRAIN_BY_VALUE_CONSTRAINT+ '''' + ')'
+				SELECT @SQLConstraint +=  ' AND TVAL_CHAR LIKE ''%'+@CONSTRAIN_BY_VALUE_CONSTRAINT+'%'''
+				--' AND CONTAINS(OBSERVATION_BLOB, ''' +@CONSTRAIN_BY_VALUE_CONSTRAINT+ '''' + ')'
 		END
 
 		--Valueflag constraint
