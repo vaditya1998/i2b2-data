@@ -137,5 +137,5 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in udf_aggregation_sql: ' || SQLERRM);
         RETURN NULL;
 END udf_aggregation_sql;
-/
+
 

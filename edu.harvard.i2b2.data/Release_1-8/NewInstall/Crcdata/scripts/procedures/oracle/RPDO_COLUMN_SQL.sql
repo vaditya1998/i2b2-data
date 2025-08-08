@@ -188,5 +188,5 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in udf_rpdo_column_sql: ' || SQLERRM);
         RETURN NULL;
 END;
-/
+
 

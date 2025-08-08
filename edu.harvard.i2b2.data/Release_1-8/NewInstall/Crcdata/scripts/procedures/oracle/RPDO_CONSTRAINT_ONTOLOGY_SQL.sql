@@ -37,5 +37,4 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Error in udf_constraint_ontology_sql: ' || SQLERRM);
         RETURN '-- Error: ' || SQLERRM;
 END udf_constraint_ontology_sql;
-/
 
