@@ -40,7 +40,7 @@ BEGIN
         ELSIF upper(p_constrain_by_value_type) = 'ENUM' THEN
             IF upper(v_operator) = 'LIKE' THEN
 				v_sqlconstraint := v_sqlconstraint ||
-				   ' AND TVAL_CHAR LIKE ''%' || replace(p_constrain_by_value_constraint, E'\\', E'\\\\') || '%'' ESCAPE ''\\''';
+				   ' AND TVAL_CHAR LIKE ''%' || replace(p_constrain_by_value_constraint, E'\\', E'\\\\') || '%'' ESCAPE E''\\''';
             ELSIF upper(v_operator) = 'IN' THEN
                 v_sqlconstraint := v_sqlconstraint ||
                    ' AND TVAL_CHAR IN ' || p_constrain_by_value_constraint;

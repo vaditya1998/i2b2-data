@@ -9,7 +9,7 @@ DECLARE
 BEGIN
     IF p_c_operator = 'LIKE' THEN
 		v_sqlconstraint := p_c_columnname || ' ' || p_c_operator || ' ''' ||
-			replace(replace(p_c_dimcode, '''', ''''''), E'\\', E'\\\\') || '%'' ESCAPE ''\\''';
+			replace(replace(p_c_dimcode, '''', ''''''), E'\\', E'\\\\') || '%'' ESCAPE E''\\''';
 
     ELSIF p_c_operator IN ('>', '>=', '=', '<>', '<', '<=', 'BETWEEN') THEN
         IF p_c_columndatatype = 'N' THEN
