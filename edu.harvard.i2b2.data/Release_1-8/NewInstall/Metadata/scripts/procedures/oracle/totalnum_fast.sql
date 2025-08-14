@@ -28,13 +28,42 @@ Assuming PV_FACT_PAIRS is already created as a global temporary table, run:
 
 */
 
+DECLARE
+  table_exists NUMBER;
+BEGIN
+  -- Check if the table 'PV_FACT_PAIRS' already exists in the current schema
+  SELECT COUNT(*)
+  INTO table_exists
+  FROM USER_TABLES
+  WHERE TABLE_NAME = 'PV_FACT_PAIRS';
 
-CREATE GLOBAL TEMPORARY TABLE PV_FACT_PAIRS (
+  -- If the table does not exist, then create it
+  IF table_exists = 0 THEN
+    EXECUTE IMMEDIATE '
+      CREATE GLOBAL TEMPORARY TABLE PV_FACT_PAIRS (
+        PATIENT_NUM NUMBER,
+        CONCEPT_CD VARCHAR2(50),
+        CONSTRAINT PK_PV_FACT_PAIRS PRIMARY KEY (PATIENT_NUM, CONCEPT_CD)
+      )
+      ON COMMIT PRESERVE ROWS
+    ';
+    DBMS_OUTPUT.PUT_LINE('Global Temporary Table PV_FACT_PAIRS created successfully.');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Global Temporary Table PV_FACT_PAIRS already exists.');
+  END IF;
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Handle any errors that might occur during table creation
+    DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+GO -- required for ANT script
+
+/*CREATE GLOBAL TEMPORARY TABLE PV_FACT_PAIRS (
   PATIENT_NUM NUMBER,
   CONCEPT_CD VARCHAR2(50),
   CONSTRAINT PK_PV_FACT_PAIRS PRIMARY KEY (PATIENT_NUM, CONCEPT_CD)
 )
-ON COMMIT PRESERVE ROWS;
+ON COMMIT PRESERVE ROWS;*/
 
 
 CREATE OR REPLACE PROCEDURE FastTotalnumCount IS
