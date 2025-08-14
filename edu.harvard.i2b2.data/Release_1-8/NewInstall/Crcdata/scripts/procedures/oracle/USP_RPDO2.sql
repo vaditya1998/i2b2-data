@@ -45,6 +45,7 @@ CREATE OR REPLACE PROCEDURE usp_rpdo2 (
     v_full_sql        CLOB;
     v_pivot_cols      CLOB;
     v_pivot_sql       CLOB;
+    v_select_cols     CLOB;
     -- per‑row values
     v_c_tablename                        VARCHAR2(50);
     v_column_name                        VARCHAR2(1000);
@@ -202,18 +203,48 @@ BEGIN
       v_set_index := v_set_index + 1;
     END LOOP;
 
-    -- 6) Build the pivot SQL and open the cursor
+    -- 6) Build the PIVOT IN list from requested column definitions
     SELECT LISTAGG(
-             '''' || col || ''' AS "' ||
-             SUBSTR(REGEXP_REPLACE(col, '[^A-Za-z0-9_]', '_'), 1, 128) || '"'
+             '''' || column_name || ''' AS "' ||
+             SUBSTR(REGEXP_REPLACE(column_name, '[^A-Za-z0-9_]', '_'), 1, 128) || '"'
            , ',')
-           WITHIN GROUP (ORDER BY col)
+           WITHIN GROUP (ORDER BY set_index)
       INTO v_pivot_cols
-      FROM (SELECT DISTINCT col FROM tmp_results_tall);
+      FROM (
+        SELECT DISTINCT set_index, column_name
+          FROM tmp_column_definitions
+      );
 
+    -- 7) Build the SELECT list with per-column defaults after pivot
+    --    Exists -> 'No', Num* -> 0, else -> '' (empty string)
+    SELECT LISTAGG(
+             q'[NVL("]' ||
+             SUBSTR(REGEXP_REPLACE(column_name, '[^A-Za-z0-9_]', '_'), 1, 128) ||
+             q'[", ]' ||
+             CASE
+               WHEN agg_type = 'Exists'  THEN q'['No']'
+               WHEN agg_type LIKE 'Num%' THEN '0'
+               ELSE q'{''}'              -- produces '' (empty string literal)
+             END ||
+             q'[) "]' ||
+             SUBSTR(REGEXP_REPLACE(column_name, '[^A-Za-z0-9_]', '_'), 1, 128) ||
+             q'["]'
+           , ', ')
+           WITHIN GROUP (ORDER BY set_index)
+      INTO v_select_cols
+      FROM (
+        SELECT DISTINCT set_index, column_name, agg_type
+          FROM tmp_column_definitions
+      );
+
+    -- 8) Build the pivot SQL using full patient × column grid
     v_pivot_sql :=
-      'SELECT * FROM ( ' ||
-      '  SELECT patient_num, col, val FROM tmp_results_tall ' ||
+      'SELECT patient_num, ' || v_select_cols || ' FROM ( ' ||
+      '  SELECT p.patient_num, co.column_name AS col, ce.val ' ||
+      '    FROM (' || v_patientset_sql || ') p ' ||
+      '    CROSS JOIN tmp_column_definitions co ' ||
+      '    LEFT JOIN tmp_results_tall ce ' ||
+      '      ON ce.col = co.column_name AND ce.patient_num = p.patient_num ' ||
       ') PIVOT ( ' ||
       '  MAX(val) FOR col IN (' || v_pivot_cols || ') ' ||
       ')';
