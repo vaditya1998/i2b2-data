@@ -18,7 +18,7 @@ Description:
        
 Usage Example in Oracle:
 --------------------------------------------------------------------------------
-To run on the default schema ('DBO'):
+To run on the default schema ('I2B2'):
   
   BEGIN
     FastTotalnumPrep;
@@ -39,7 +39,7 @@ Or, to specify a different schema:
 -- In Oracle you must drop the procedure manually (there’s no “IF EXISTS” clause)
 -- DROP PROCEDURE FastTotalnumPrep;
  
-CREATE OR REPLACE PROCEDURE FastTotalnumPrep (schemaname IN VARCHAR2 DEFAULT 'DBO')
+CREATE OR REPLACE PROCEDURE FastTotalnumPrep (schemaname IN VARCHAR2 DEFAULT 'I2B2')
 IS
   -- Variables used for dynamic SQL
   sqlstr   VARCHAR2(4000);
@@ -290,6 +290,4 @@ BEGIN
   --  there is no direct NOWAIT equivalent.)
   DBMS_OUTPUT.PUT_LINE('(BENCH) ' || label || ',' || label2 || ',' || duration);
 END EndTime;
-/
 
-/
