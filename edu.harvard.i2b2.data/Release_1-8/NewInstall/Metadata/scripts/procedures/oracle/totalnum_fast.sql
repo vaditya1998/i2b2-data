@@ -56,7 +56,8 @@ EXCEPTION
     -- Handle any errors that might occur during table creation
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END;
-GO -- required for ANT script
+-- required for ANT script
+GO
 
 /*CREATE GLOBAL TEMPORARY TABLE PV_FACT_PAIRS (
   PATIENT_NUM NUMBER,
