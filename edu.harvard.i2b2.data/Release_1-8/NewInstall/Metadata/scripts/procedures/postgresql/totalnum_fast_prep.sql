@@ -33,7 +33,7 @@ Acknowledgements:
 CREATE OR REPLACE FUNCTION fasttotalnumprep(schemaname text DEFAULT 'public')
 RETURNS void
 LANGUAGE plpgsql
-AS $$
+AS $sql$
 DECLARE
     sqlstr text;
     v_sql text;
@@ -201,4 +201,4 @@ EXCEPTION
     WHEN OTHERS THEN
       RAISE;
 END;
-$$;
+$sql$;

@@ -22,7 +22,7 @@ Acknowledgement:
 */
 CREATE OR REPLACE PROCEDURE fasttotalnumcount()
 LANGUAGE plpgsql
-AS $$
+AS $sql$
 DECLARE
     start_time timestamp;
 BEGIN
@@ -145,4 +145,4 @@ EXCEPTION
   WHEN OTHERS THEN
     RAISE;
 END;
-$$;
+$sql$;

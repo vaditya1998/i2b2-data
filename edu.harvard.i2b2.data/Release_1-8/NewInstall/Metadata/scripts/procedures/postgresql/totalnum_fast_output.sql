@@ -25,7 +25,7 @@ Acknowledgement:
 */
 CREATE OR REPLACE PROCEDURE fasttotalnumoutput(schemaname text DEFAULT 'dbo', tablename text DEFAULT '@')
 LANGUAGE plpgsql
-AS $$
+AS $sql$
 DECLARE
     sqlstr text;
     sqltext text;
@@ -99,4 +99,4 @@ BEGIN
     PERFORM buildtotalnumreport(10, 6.5);
     
 END;
-$$;
+$sql$;
