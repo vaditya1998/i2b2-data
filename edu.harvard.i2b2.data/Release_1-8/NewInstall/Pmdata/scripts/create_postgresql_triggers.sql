@@ -2,6 +2,22 @@
    Trigger : trg_prune_pm_user_session
    Purpose : Archive & prune pm_user_session (keep 100 newest)
    ===============================================================*/
+   
+/* =======================================================================
+   PostgreSQL 10 compatibility notes
+
+   1) Change the trigger creation to use EXECUTE PROCEDURE (PG11+ uses EXECUTE FUNCTION):
+        -- PG10:
+        CREATE TRIGGER trg_prune_pm_user_session
+        AFTER INSERT ON pm_user_login
+        FOR EACH STATEMENT
+        EXECUTE PROCEDURE fn_prune_pm_user_session();
+
+        -- PG11+:
+        -- EXECUTE FUNCTION fn_prune_pm_user_session();
+
+   ======================================================================= */
+
 
 CREATE OR REPLACE FUNCTION fn_prune_pm_user_session()
 RETURNS TRIGGER
@@ -16,7 +32,7 @@ BEGIN
            ➊ build to_delete   ➋ insert archive rows   ➌ delete live rows
            ------------------------------------------------------------ */
         WITH to_delete AS (
-                /* ➊ keys older than the newest 100 expired sessions */
+                /* keys older than the newest 100 expired sessions */
                 SELECT user_id, session_id
                 FROM (
                     SELECT user_id,
@@ -27,13 +43,13 @@ BEGIN
                 ) x
                 WHERE rn > 100
         ), ins AS (
-                /* ➋ archive them */
+                /* archive them */
                 INSERT INTO pm_user_session_arc
                 SELECT p.*, CURRENT_TIMESTAMP
                 FROM   pm_user_session p
                 JOIN   to_delete       t USING (user_id, session_id)
         )
-        /* ➌ delete them from the live table */
+        /* delete them from the live table */
         DELETE FROM pm_user_session p
         USING to_delete t
         WHERE p.user_id    = t.user_id
@@ -42,11 +58,27 @@ BEGIN
     END IF;
     RETURN NULL;           -- statement‑level trigger
 END;
-$sql$;
+$sql$
 /
 
-CREATE OR REPLACE TRIGGER trg_prune_pm_user_session
+/* ===============================================================
+   Drop old trigger safely (table may or may not exist)
+   ===============================================================*/
+DO $sql$
+BEGIN
+  BEGIN
+    EXECUTE 'DROP TRIGGER IF EXISTS trg_prune_pm_user_session ON pm_user_login';
+  EXCEPTION WHEN undefined_table THEN
+    -- pm_user_login not present yet; ignore
+    NULL;
+  END;
+END $sql$ 
+/
+/* ===============================================================
+   Create trigger (PG 11+: EXECUTE FUNCTION; PG 10-: use PROCEDURE)
+   ===============================================================*/
+CREATE TRIGGER trg_prune_pm_user_session
 AFTER INSERT ON pm_user_login
 FOR EACH STATEMENT
-EXECUTE FUNCTION fn_prune_pm_user_session();
+EXECUTE FUNCTION fn_prune_pm_user_session()
 /
