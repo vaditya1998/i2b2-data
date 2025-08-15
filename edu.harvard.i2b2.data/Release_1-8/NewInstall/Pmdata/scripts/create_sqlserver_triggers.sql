@@ -62,3 +62,4 @@ BEGIN
       ON    t.USER_ID = s.USER_ID
       AND   t.SESSION_ID = s.SESSION_ID;
 END;
+/

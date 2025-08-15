@@ -23,17 +23,17 @@ TRUNCATE TABLE pm_user_session;
 CREATE OR REPLACE FUNCTION fn_prune_pm_user_session()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $$
+AS $sql$
 BEGIN
     /* Skip pruning until the table grows past 1 000 rows */
     IF (SELECT COUNT(*) FROM pm_user_session) > 1000 THEN
 
         /* ------------------------------------------------------------
            One statement:
-           ➊ build to_delete   ➋ insert archive rows   ➌ delete live rows
+            build to_delete    insert archive rows    delete live rows
            ------------------------------------------------------------ */
         WITH to_delete AS (
-                /* ➊ keys older than the newest 100 expired sessions */
+                /* keys older than the newest 100 expired sessions */
                 SELECT user_id, session_id
                 FROM (
                     SELECT user_id,
@@ -59,7 +59,7 @@ BEGIN
     END IF;
     RETURN NULL;           -- statement‑level trigger
 END;
-$$;
+$sql$;
 
 
 CREATE OR REPLACE TRIGGER trg_prune_pm_user_session

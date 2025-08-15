@@ -17,6 +17,19 @@ $Id: data_build.xml,v 1.3 2010/05/24 15:39:23 rk903 Exp $
 			<pathelement location="../../mssql-jdbc-8.2.2.jre8.jar"/>
 			<pathelement location="../../postgresql-42.2.14.jar"/>
 		</path>
+		
+	  <!-- Normalize: detect Oracle (case-insensitive) -->
+	  <condition property="is.oracle">
+		<matches string="${db.type}" pattern="(?i)^oracle$"/>
+	  </condition>
+
+	  <!-- Pick delimiter settings based on db.type -->
+	  <condition property="sql.delimiter" value="/" else=";">
+		<istrue value="${is.oracle}"/>
+	  </condition>
+	  <condition property="sql.delimitertype" value="row" else="normal">
+		<istrue value="${is.oracle}"/>
+	  </condition>
 	</target>
 
 	
@@ -38,10 +51,21 @@ $Id: data_build.xml,v 1.3 2010/05/24 15:39:23 rk903 Exp $
 	</target>
 	
 	<target name="upgrade_tables_release_1-8-1" depends="init">
-		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" classpathref="classpath" onerror="continue" print="true">
-			<transaction src="./scripts/upgrade_${db.type}_1-8-1.sql" />
-		</sql>
+	  <sql driver="${db.driver}"
+		   url="${db.url}"
+		   userid="${db.username}"
+		   password="${db.password}"
+		   classpathref="classpath"
+		   onerror="continue"
+		   print="true"
+		   delimiter="${sql.delimiter}"
+		   delimitertype="${sql.delimitertype}"
+		   keepformat="true">
+		<transaction src="./scripts/upgrade_${db.type}_1-8-1.sql"/>
+	  </sql>
 	</target>
+
+
 
 </project>
 

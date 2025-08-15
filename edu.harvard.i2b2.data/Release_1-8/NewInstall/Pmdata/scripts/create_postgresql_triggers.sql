@@ -6,7 +6,7 @@
 CREATE OR REPLACE FUNCTION fn_prune_pm_user_session()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $$
+AS $sql$
 BEGIN
     /* Skip pruning until the table grows past 1 000 rows */
     IF (SELECT COUNT(*) FROM pm_user_session) > 1000 THEN
@@ -42,10 +42,11 @@ BEGIN
     END IF;
     RETURN NULL;           -- statement‑level trigger
 END;
-$$;
-
+$sql$;
+/
 
 CREATE OR REPLACE TRIGGER trg_prune_pm_user_session
 AFTER INSERT ON pm_user_login
 FOR EACH STATEMENT
 EXECUTE FUNCTION fn_prune_pm_user_session();
+/
