@@ -4,16 +4,19 @@
 --==============================================================
 
 CREATE TABLE pm_user_session_arc AS
-SELECT * FROM pm_user_session;
+SELECT * FROM pm_user_session
+/
 
 ALTER TABLE pm_user_session_arc
-    ADD COLUMN archived_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP;
+    ADD COLUMN archived_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+/
     
 ALTER TABLE pm_user_session_arc
-ADD CONSTRAINT PK_pm_user_session_arc PRIMARY KEY (SESSION_ID, USER_ID);
+ADD CONSTRAINT PK_pm_user_session_arc PRIMARY KEY (SESSION_ID, USER_ID)
+/
 
-TRUNCATE TABLE pm_user_session;
-
+TRUNCATE TABLE pm_user_session
+/
     
 /* ===============================================================
    Trigger : trg_prune_pm_user_session
@@ -59,10 +62,44 @@ BEGIN
     END IF;
     RETURN NULL;           -- statement‑level trigger
 END;
-$sql$;
+$sql$
+/
 
 
-CREATE OR REPLACE TRIGGER trg_prune_pm_user_session
+/* ===============================================================
+   Drop old trigger safely (table may or may not exist)
+   ===============================================================*/
+DO $sql$
+BEGIN
+  BEGIN
+    EXECUTE 'DROP TRIGGER IF EXISTS trg_prune_pm_user_session ON pm_user_login';
+  EXCEPTION WHEN undefined_table THEN
+    -- pm_user_login not present yet; ignore
+    NULL;
+  END;
+END $sql$ 
+/
+
+/* =======================================================================
+   PostgreSQL 10 compatibility notes
+
+   1) Change the trigger creation to use EXECUTE PROCEDURE (PG11+ uses EXECUTE FUNCTION):
+        -- PG10:
+        CREATE TRIGGER trg_prune_pm_user_session
+        AFTER INSERT ON pm_user_login
+        FOR EACH STATEMENT
+        EXECUTE PROCEDURE fn_prune_pm_user_session();
+
+        -- PG11+:
+        -- EXECUTE FUNCTION fn_prune_pm_user_session();
+
+   ======================================================================= */
+
+/* ===============================================================
+   Create trigger (PG 11+: EXECUTE FUNCTION; PG 10-: use PROCEDURE)
+   ===============================================================*/
+CREATE TRIGGER trg_prune_pm_user_session
 AFTER INSERT ON pm_user_login
 FOR EACH STATEMENT
-EXECUTE FUNCTION fn_prune_pm_user_session();
+EXECUTE FUNCTION fn_prune_pm_user_session()
+/
