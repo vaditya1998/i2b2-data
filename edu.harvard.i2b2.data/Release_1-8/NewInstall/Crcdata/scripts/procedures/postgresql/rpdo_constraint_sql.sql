@@ -88,7 +88,7 @@ BEGIN
         ELSIF upper(p_constrain_by_value_type) = 'LARGETEXT' THEN
             IF upper(v_operator) = 'CONTAINS' THEN
                 v_sqlconstraint := v_sqlconstraint ||
-                   ' AND CONTAINS(OBSERVATION_BLOB, ''' || p_constrain_by_value_constraint || ''')';
+                   ' AND OBSERVATION_BLOB LIKE ''%' || p_constrain_by_value_constraint || '%''';
             END IF;
         END IF;
     END IF;
