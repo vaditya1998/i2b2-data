@@ -16,31 +16,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DEMOGRAPHIC_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team </DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Demographics.csv</Filename>
 	<Query>SELECT   to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
@@ -60,7 +35,6 @@ The i2b2 Team </DataManagerEmailMessage>
   where a.patient_num = c.patient_num</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_REQUEST','<?xml version="1.0"?>
@@ -76,31 +50,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team </DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/PatientMapping.csv</Filename>
 	<Query>SELECT DISTINCT to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
@@ -110,7 +59,6 @@ The i2b2 Team </DataManagerEmailMessage>
   where a.patient_num = c.patient_num</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_REQUEST','<?xml version="1.0"?>
@@ -127,34 +75,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
-	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Medication.csv</Filename>
+	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Medications.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
         ,a.start_date as "START_DATE"
         ,a.start_date as "END_DATE"
@@ -170,16 +92,15 @@ The i2b2 Team
         ,p.name_char as "PROVIDER"
         ,to_char(a.encounter_num) as "ENCOUNTER_NUMBER"
     FROM {{{FULL_SCHEMA}}}observation_fact  a 
-    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\ACT\Medications\%''
+    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like '\ACT\Medications\%'
     JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\ACT\Visit Details\Visit type\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\ACT\Visit Details\Visit type\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
-    </Query>
+   </Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_REQUEST','<?xml version="1.0"?>
@@ -195,34 +116,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
-	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Procedure.csv</Filename>
+	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Procedures.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
         ,a.start_date as "START_DATE"
         ,a.start_date as "END_DATE"
@@ -237,16 +132,15 @@ The i2b2 Team
         ,p.name_char as "PROVIDER"
         ,to_char(a.encounter_num) as "ENCOUNTER_NUMBER"
     FROM {{{FULL_SCHEMA}}}observation_fact  a 
-    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\ACT\Procedures\%''
+    INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like '\ACT\Procedures\%'
     JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\ACT\Visit Details\Visit type\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\ACT\Visit Details\Visit type\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
-     </Query>
+   </Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_REQUEST','<?xml version="1.0"?>
@@ -262,32 +156,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Diagnosis.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
@@ -303,16 +171,15 @@ The i2b2 Team
        ,p.name_char as "PROVIDER"
        ,to_char(a.encounter_num) as "ENCOUNTER_NUMBER"
    FROM {{{FULL_SCHEMA}}}observation_fact  a 
-   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\ACT\Diagnosis\%''
+   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like '\ACT\Diagnosis\%'
    JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\ACT\Visit Details\Visit type\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\ACT\Visit Details\Visit type\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
    </Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_REQUEST','<?xml version="1.0"?>
@@ -328,34 +195,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 ;
 insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_CSV','<?xml version="1.0"?>
 <ValueExporter>
-  <Version>3.02</Version>
-  <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
-	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Lab.csv</Filename>
+	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Labs.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM) as "I2B2_PATIENT_NUMBER"
        ,a.start_date as "START_DATE"
        ,a.start_date as "END_DATE"
@@ -372,16 +213,15 @@ The i2b2 Team
        ,p.name_char as "PROVIDER"
        ,to_char(a.encounter_num) as "ENCOUNTER_NUMBER"
    FROM {{{FULL_SCHEMA}}}observation_fact  a 
-   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like ''\ACT\Lab\%''
+   INNER  JOIN {{{FULL_SCHEMA}}}concept_dimension b on a.concept_cd = b.concept_cd and b.concept_path like '\ACT\Lab\%'
    JOIN {{{DX}}} c on a.patient_num = c.patient_num
     LEFT OUTER JOIN {{{FULL_SCHEMA}}}provider_dimension p on a.provider_id = p.provider_id
     LEFT JOIN {{{FULL_SCHEMA}}}visit_dimension v on a.encounter_num = v.encounter_num and a.patient_num = v.patient_num
-    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like ''\ACT\Visit Details\Visit type\%''
+    LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\ACT\Visit Details\Visit type\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd
 	</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-
 </ValueExporter>',null,null,null)
 ;
 

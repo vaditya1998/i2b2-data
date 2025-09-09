@@ -197,30 +197,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Procedure.csv</Filename>
 	<Query>SELECT cast(a.PATIENT_NUM as varchar) as "I2B2_PATIENT_NUMBER"
@@ -264,30 +240,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Diagnosis.csv</Filename>
 	<Query>SELECT cast(a.PATIENT_NUM as varchar) as "I2B2_PATIENT_NUMBER"
@@ -330,30 +282,6 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
-  <DataManagerEmailMessage>
-Results of the i2b2 request entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, are available.
-
-Important notes about your data:
-	- Total number of patients returned in your data request: {{{PATIENT_COUNT}}}
-	- i2b2 reviewer:
-	
-Only persons specifically authorized and selected (as listed at the top of this letter) can download these files. If additional user access is needed, please ensure the person is listed on your project IRB protocol and contact the i2b2 team.
- 
-Specifically:
-	- Remove all PHI from computer, laptop, or mobile device after analysis is completed.
-	- Do NOT share PHI or PII with anyone who is not listed on the IRB protocol.
-
-Your guideline for the storage of Protected Health Information can be found at: https://www.site.com/guidelines_for_protecting_and_storing_phi.pdf
-
-*To download these files*
-- You must be logged onto your site
-
-These results are the data that was requested under the authority of the Institutional Review Board.  The query resulting in this identified patient data is included at the end of this letter.  A copy of this letter is kept on file and is available to the IRB in the event of an audit.
-
-Thank you,
-
-The i2b2 Team 
-</DataManagerEmailMessage>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Lab.csv</Filename>
 	<Query>SELECT cast(a.PATIENT_NUM as varchar) as "I2B2_PATIENT_NUMBER"
