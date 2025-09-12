@@ -54,8 +54,15 @@ $Id: data_build.xml,v 1.3 2010/05/23 20:21:51 rk903 Exp $
 			delimitertype="row"
 			keepformat="true"
 			>
+			 <path>
+			 	<sort>
+				    <fileset dir="./scripts/procedures/${db.type}">
+				      <include name="*.sql"/>
+				    </fileset>
+			 	</sort>
+			  </path>
 
-
+/*
 			<transaction src="./scripts/procedures/${db.type}/CREATE_TEMP_CONCEPT_TABLE.sql" />
             <transaction src="./scripts/procedures/${db.type}/CREATE_TEMP_PATIENT_TABLE.sql" />
 			<transaction src="./scripts/procedures/${db.type}/CREATE_TEMP_PID_TABLE.sql" />
@@ -85,6 +92,7 @@ $Id: data_build.xml,v 1.3 2010/05/23 20:21:51 rk903 Exp $
 			<transaction src="./scripts/procedures/${db.type}/RPDO_CONSTRAINT_SQL.sql"/>
 			<transaction src="./scripts/procedures/${db.type}/RPDO_CONSTRAINT_ONTOLOGY_SQL.sql"/>
 			<transaction src="./scripts/procedures/${db.type}/RPDO_PATIENTSET_SQL.sql"/>
+			*/
 			<!--<transaction src="./scripts/procedures/${db.type}/RPDO_RPDO_COLUMN_SQL_INDEX.sql"/>
 			<transaction src="./scripts/procedures/${db.type}/RPDO_INDEXDATE_CONSTRAINT_SQL.sql"/>-->
 
