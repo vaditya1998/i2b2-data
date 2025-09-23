@@ -23,7 +23,7 @@ Acknowledgement:
   This Postgres conversion was assisted by ChatGPT.
 --------------------------------------------------------------------------------
 */
-CREATE OR REPLACE PROCEDURE fasttotalnumoutput(schemaname text DEFAULT 'dbo', tablename text DEFAULT '@')
+CREATE OR REPLACE PROCEDURE fasttotalnumoutput(schemaname text DEFAULT 'public', tablename text DEFAULT '@')
 LANGUAGE plpgsql
 AS $sql$
 DECLARE
