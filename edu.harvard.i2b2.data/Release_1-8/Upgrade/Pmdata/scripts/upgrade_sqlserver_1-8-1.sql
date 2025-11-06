@@ -48,8 +48,8 @@ BEGIN
        ------------------------------------------------------------------ */
     DECLARE @to_delete TABLE (
         USER_ID    varchar(50) NOT NULL,
-        SESSION_ID varchar(50) NOT NULL,
-        PRIMARY KEY (SESSION_ID, USER_ID)
+        SESSION_ID varchar(50) NOT NULL
+        --PRIMARY KEY (SESSION_ID, USER_ID) -- doesn't work in some versions, not really necessary
     );
 
     INSERT INTO @to_delete (USER_ID, SESSION_ID)
