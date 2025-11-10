@@ -179,6 +179,16 @@ FROM DBO.ACT_DEM_V41
 )M LEFT JOIN CTE_BASECODE_OVERRIDE BO
   ON M.c_fullname = BO.c_fullname
 where M.C_FULLNAME LIKE '\ACT\Demographics%';
+/* SITE SPECIFIC ONTOLOGY ITEMS CAN BE ADDED HERE -- REQUIRED FOR usp [FastTotalNumCount] TO AGGREGATE SITE CUSTOM CONCEPTS
+EX: 
+UNION
+SELECT c_hlevel, c_fullname, c_synonym_cd, c_visualattributes, case when charindex(':',c_basecode)=0 and nullif(c_basecode,'') is not null 
+                        then concat(c_tablename,'|',c_columnname,':',c_basecode) 
+                        else c_basecode 
+                        end as c_basecode, c_facttablecolumn, c_tablename, c_columnname, c_columndatatype, c_operator, c_dimcode, m_applied_path
+FROM DBO.<SITE_ONTOLOGY_TABLE>
+*/
+
 /* END TNUM_ONTOLOGY LOAD */
 
 CREATE INDEX IDX_ONT_ITEMS ON TNUM_ONTOLOGY (C_FULLNAME) INCLUDE (C_HLEVEL, C_BASECODE);
