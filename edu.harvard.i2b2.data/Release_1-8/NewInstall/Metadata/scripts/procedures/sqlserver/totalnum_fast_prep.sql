@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------------------------
--- This is all the preperatory work that must happen once when the ontology changes before running FastTotalnumRun.
+-- This is all the preparatory work that must happen once when the ontology changes before running FastTotalnumRun.
 -- create a view of distinct concept codes and patient nums (OBSFACT_PAIRS), a unified ontology (TNUM_ONTOLOGY) and a transitive closure table (CONCEPT_CLOSURE) 
 -- by Darren Henderson (UKY) and Jeff Klann, PhD (MGB) 
 -- Last updated: 02/2024
@@ -123,6 +123,27 @@ END
 CLOSE CUR
 DEALLOCATE CUR
 
+/* 20250620 - DWH: SPECIAL CASE TO ENSURE VISIT TYPE ONTOLOGY IS INCLUDED FROM ACT_VISIT_DETAILS_V41 */
+/* In FastTotalnumCount the INOUT_CD field from visit dimension is pulled as a fact keypair with an override concept_cd prefix of visit_dimension|inout_cd: */
+INSERT INTO TNUM_ONTOLOGY (C_HLEVEL, C_FULLNAME, C_SYNONYM_CD, C_VISUALATTRIBUTES, C_BASECODE, C_FACTTABLECOLUMN, C_TABLENAME, C_COLUMNNAME, C_COLUMNDATATYPE, C_OPERATOR, C_DIMCODE, M_APPLIED_PATH)
+SELECT DISTINCT C_HLEVEL, C_FULLNAME, C_SYNONYM_CD, C_VISUALATTRIBUTES, CONCAT('visit_dimension|inout_cd:',C_BASECODE), C_FACTTABLECOLUMN, C_TABLENAME, C_COLUMNNAME, C_COLUMNDATATYPE, C_OPERATOR, C_DIMCODE, M_APPLIED_PATH
+FROM ACT_VISIT_DETAILS_V41
+WHERE C_FULLNAME LIKE '\ACT\Visit Details\Visit type\%'
+UNION 
+
+/* 20250620 - DWH: SPECIAL CASE TO ENSURE VISIT LENGTH OF STAY ONTOLOGY IS INCLUDED FROM ACT_VISIT_DETAILS_V41 */
+/* In FastTotalnumCount the LENGTH_OF_STAY field from visit dimension is pulled as a fact keypair with an override concept_cd prefix of visit_dimension|length_of_stay: */
+
+SELECT DISTINCT C_HLEVEL, C_FULLNAME, C_SYNONYM_CD, C_VISUALATTRIBUTES, CONCAT('visit_dimension|length_of_stay:',C_BASECODE), C_FACTTABLECOLUMN, C_TABLENAME, C_COLUMNNAME, C_COLUMNDATATYPE, C_OPERATOR, C_DIMCODE, M_APPLIED_PATH
+FROM ACT_VISIT_DETAILS_V41
+WHERE C_FULLNAME LIKE '\ACT\Visit Details\Length of Stay\%'
+
+/* 20250620 - DWH */
+/* Ensure root node for Visit Details exists for closure */
+INSERT INTO TNUM_ONTOLOGY (C_HLEVEL, C_FULLNAME, C_SYNONYM_CD, C_VISUALATTRIBUTES, C_BASECODE, C_FACTTABLECOLUMN, C_TABLENAME, C_COLUMNNAME, C_COLUMNDATATYPE, C_OPERATOR, C_DIMCODE, M_APPLIED_PATH)
+SELECT DISTINCT C_HLEVEL, C_FULLNAME, C_SYNONYM_CD, C_VISUALATTRIBUTES, CONCAT('visit_dimension|inout_cd:',C_BASECODE) AS C_BASECODE, C_FACTTABLECOLUMN, C_TABLENAME, C_COLUMNNAME, C_COLUMNDATATYPE, C_OPERATOR, C_DIMCODE, M_APPLIED_PATH
+FROM ACT_VISIT_DETAILS_V41
+WHERE C_FULLNAME = '\ACT\Visit Details\'
 
 /* THIS ONTOLOGY WILL BE USED TO CONVERT PATIENT DATA IN THE PATIENT_DIMENSION TABLE INTO FACTS THAT CAN BE AGGREGATED IN THE SAME FASHION AS THE FACT(S) TABLES */
 ;WITH CTE_BASECODE_OVERRIDE AS (
@@ -157,7 +178,17 @@ SELECT c_hlevel, c_fullname, c_synonym_cd, c_visualattributes, case when charind
 FROM DBO.ACT_DEM_V41
 )M LEFT JOIN CTE_BASECODE_OVERRIDE BO
   ON M.c_fullname = BO.c_fullname
-where C_FACTTABLECOLUMN != 'concept_cd';
+where M.C_FULLNAME LIKE '\ACT\Demographics%';
+/* SITE SPECIFIC ONTOLOGY ITEMS CAN BE ADDED HERE -- REQUIRED FOR usp [FastTotalNumCount] TO AGGREGATE SITE CUSTOM CONCEPTS
+EX: 
+UNION
+SELECT c_hlevel, c_fullname, c_synonym_cd, c_visualattributes, case when charindex(':',c_basecode)=0 and nullif(c_basecode,'') is not null 
+                        then concat(c_tablename,'|',c_columnname,':',c_basecode) 
+                        else c_basecode 
+                        end as c_basecode, c_facttablecolumn, c_tablename, c_columnname, c_columndatatype, c_operator, c_dimcode, m_applied_path
+FROM DBO.<SITE_ONTOLOGY_TABLE>
+*/
+
 /* END TNUM_ONTOLOGY LOAD */
 
 CREATE INDEX IDX_ONT_ITEMS ON TNUM_ONTOLOGY (C_FULLNAME) INCLUDE (C_HLEVEL, C_BASECODE);
@@ -180,7 +211,9 @@ CREATE TABLE CONCEPT_CLOSURE (
 ;WITH CONCEPTS (C_FULLNAME, C_HLEVEL, C_BASECODE, DESCENDANT) AS (
 SELECT C_FULLNAME, CAST(C_HLEVEL AS INT) C_HLEVEL, C_BASECODE, PATH_NUM AS DESCENDANT
 FROM TNUM_ONTOLOGY
-WHERE ISNULL(C_FULLNAME,'') <> '' AND ISNULL(C_BASECODE,'') <> ''
+WHERE ISNULL(C_FULLNAME,'') <> '' 
+  AND ((C_VISUALATTRIBUTES='LA' AND ISNULL(C_BASECODE,'') <> '')  -- 20250620 - DWH: fixes ontology skip issues in concept_closure
+        OR C_VISUALATTRIBUTES = 'FA')
 UNION ALL
 SELECT LEFT(C_FULLNAME, LEN(C_FULLNAME)-CHARINDEX('\', RIGHT(REVERSE(C_FULLNAME), LEN(C_FULLNAME)-1))) AS C_FULLNAME
   , CAST(C_HLEVEL-1 AS INT) C_HLEVEL, C_BASECODE, DESCENDANT

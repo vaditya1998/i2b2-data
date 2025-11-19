@@ -23,7 +23,7 @@ Acknowledgement:
   This Postgres conversion was assisted by ChatGPT.
 --------------------------------------------------------------------------------
 */
-CREATE OR REPLACE PROCEDURE fasttotalnumoutput(schemaname text DEFAULT 'dbo', tablename text DEFAULT '@')
+CREATE OR REPLACE PROCEDURE fasttotalnumoutput(schemaname text DEFAULT 'public', tablename text DEFAULT '@')
 LANGUAGE plpgsql
 AS $sql$
 DECLARE
@@ -87,7 +87,7 @@ BEGIN
     -- Denominator: if no row exists in totalnum for c_fullname = ''\denominator\facts\'' today, then insert one.
     IF (SELECT COUNT(*) FROM totalnum 
         WHERE c_fullname = E'\denominator\\facts\\' 
-          AND date(agg_date) = current_date) = 0 THEN
+          AND agg_date::date = current_date) = 0 THEN
       sqlstr := 'INSERT INTO totalnum(c_fullname, agg_date, agg_count, typeflag_cd) ' ||
                 'SELECT E''\denominator\\facts\\'', now(), COUNT(DISTINCT patient_num), ''PX'' ' ||
                 'FROM ' || schemaname || '.observation_fact';

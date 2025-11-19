@@ -3,7 +3,7 @@
 
 */
 
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DEMOGRAPHIC_REQUEST','<?xml version="1.0"?>
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DEMOGRAPHIC_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -12,9 +12,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DEMOGRAPHIC_CSV','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DEMOGRAPHIC_CSV',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Demographics.csv</Filename>
@@ -24,9 +23,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   where a.patient_num = c.patient_num</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_REQUEST','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -35,9 +33,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_CSV','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MAPPING_CSV',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/PatientMapping.csv</Filename>
@@ -48,9 +45,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   where a.patient_num = c.patient_num</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_REQUEST','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -59,10 +55,9 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
+</ValueExporter>'$XML$,null,null,null);
 
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_CSV','<?xml version="1.0"?><ValueExporter>
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_MEDICATION_CSV',$XML$'<?xml version="1.0"?><ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Medications.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM, 'FM999999999999999999') as "I2B2_PATIENT_NUMBER"
@@ -87,9 +82,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
     LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\\ACT\Visit Details\\Visit type\\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
-  </File></ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_REQUEST','<?xml version="1.0"?>
+  </File></ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -98,9 +92,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_CSV','<?xml version="1.0"?><ValueExporter>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_PROCEDURE_CSV',$XML$'<?xml version="1.0"?><ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Procedures.csv</Filename>
 	<Query>SELECT to_char(a.PATIENT_NUM, 'FM999999999999999999') as "I2B2_PATIENT_NUMBER"
@@ -124,9 +117,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
     LEFT JOIN {{{FULL_SCHEMA}}}concept_dimension w on w.concept_cd = v.inout_cd and w.concept_path like '\\ACT\\Visit Details\\Visit type\\%'
     LEFT JOIN {{{FULL_SCHEMA}}}modifier_dimension m on m.modifier_cd = a.modifier_cd</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
-  </File></ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_REQUEST','<?xml version="1.0"?>
+  </File></ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -135,9 +127,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_CSV','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_DIAGNOSIS_CSV',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Diagnosis.csv</Filename>
@@ -163,9 +154,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
    </Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_REQUEST','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_REQUEST',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <Version>3.02</Version>
   <CreationDateTime>08/09/2024 12:00:00</CreationDateTime>
@@ -174,9 +164,8 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
   <DataManagerEmailMessage>This user {{{USER_NAME}}} in project {{{PROJECT_ID}}} requested i2b2 request
  entitled - "{{{QUERY_NAME}}}", submitted on {{{QUERY_STARTDATE}}}, with the query master of {{{QUERY_MASTER_ID}}}.
   </DataManagerEmailMessage>
-</ValueExporter>',null,null,null)
-;
-insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_CSV','<?xml version="1.0"?>
+</ValueExporter>'$XML$,null,null,null);
+insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) values ('PATIENT_LAB_CSV',$XML$'<?xml version="1.0"?>
 <ValueExporter>
   <File>
 	<Filename>/{{{USER_NAME}}}/{{{QUERY_MASTER_ID}}}/Labs.csv</Filename>
@@ -205,8 +194,7 @@ insert into QT_BREAKDOWN_PATH (NAME,VALUE,CREATE_DATE,UPDATE_DATE,USER_ID) value
 	</Query>
       	<SeparatorCharacter>\t</SeparatorCharacter>
   </File>
-</ValueExporter>',null,null,null)
-;
+</ValueExporter>'$XML$,null,null,null);
 
 
 
