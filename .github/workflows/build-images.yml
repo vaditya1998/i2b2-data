@@ -56,7 +56,7 @@ jobs:
         run: docker images
       
   build_mssql:
-    name: i2b2-data mssql Build & Publish image to private docker registry #both the build jobs running in isolate mode 
+    name: i2b2-data mssql Build & Publish image to private docker registry
     runs-on: ubuntu-latest
     environment: dev
     
