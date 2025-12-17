@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.insert_concept_dimension_fromtableaccess(OUT errormsg text)
+CREATE OR REPLACE FUNCTION insert_concept_dimension_fromtableaccess(OUT errormsg text)
  RETURNS text
  LANGUAGE plpgsql
 AS $function$
