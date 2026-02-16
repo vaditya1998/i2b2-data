@@ -97,6 +97,49 @@ jobs:
  
       - name: List docker images
         run: docker images
+
+  build_oracle:
+    name: i2b2-data oracle Build & Publish image to private docker registry
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unset docker host 
+        run: unset DOCKER_HOST
+ 
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HOST }}
+          password: ${{ secrets.DOCKER_LOGIN_TOKEN }}
+
+      - name: Determine tag (manual or push)
+        id: vars
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "data_tag=${{ inputs.tag }}" >> $GITHUB_ENV
+          else
+            echo "data_tag=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+          echo "Using tag: $data_tag"
+ 
+      - name: Build i2b2-data-oracle image
+        run: | 
+          export DATABASE_TAG="$data_tag"
+          echo "Building image with tag: $DATABASE_TAG"
+ 
+          export date=$(date +"%Y%m%d")
+          export docker_username=${{ secrets.DOCKER_HOST }}
+          export docker_reponame=${{ secrets.DOCKER_REPO }}
+ 
+          cd docker/i2b2-oracle/
+          sh create_oracle_image.sh "$DATABASE_TAG"
+ 
+      - name: List docker images
+        run: docker images        
       
   test_mssql:   
     name: Running mssql Tests 
@@ -176,4 +219,44 @@ jobs:
           git clone -b 1.8.2-hotfixes https://github.com/i2b2/i2b2-docker
           cd i2b2-docker/pg
           echo "Running PGSQL test cases for tag: $data_tag"
+          source test_case.sh "$core_server_tag" "$data_tag"
+
+  test_oracle:   
+    name: Running oracle Tests 
+    needs: build_oracle
+    runs-on: ubuntu-latest
+    environment: dev
+ 
+    steps:
+      - name: Unset docker host 
+        run: unset DOCKER_HOST
+ 
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HOST }}
+          password: ${{ secrets.DOCKER_LOGIN_TOKEN }}
+      
+      - name: Export docker variables
+        run: |
+          echo "docker_username=${{ secrets.DOCKER_HOST }}" >> $GITHUB_ENV
+          echo "docker_reponame=${{ secrets.DOCKER_REPO }}" >> $GITHUB_ENV
+      - name: Determine tag (manual or push)
+        id: vars
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "data_tag=${{ inputs.tag }}" >> $GITHUB_ENV
+          else
+            echo "data_tag=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+          echo "Using tag: $data_tag"
+
+      - name: Test with oracle
+        run: |
+          core_server_tag="master"
+          mkdir test_oracle
+          cd test_oracle
+          git clone -b 1.8.2-hotfixes https://github.com/adityapersistent/i2b2-docker
+          cd i2b2-docker/oracle
+          echo "Running ORACLE test cases for tag: $data_tag"
           source test_case.sh "$core_server_tag" "$data_tag"
