@@ -101,6 +101,7 @@ cd $BASE
 
 sleep 20
 df -h
+#removing i2b2-data repo to resolve space issues
 rm -rf /home/runner/work/i2b2-data/i2b2-data/i2b2-mssql/i2b2-data/edu.harvard.i2b2.data/
 
 df -h
