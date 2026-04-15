@@ -223,7 +223,7 @@ jobs:
 
   test_oracle:   
     name: Running oracle Tests 
-    needs: build_oracle
+    # needs: build_oracle
     runs-on: ubuntu-latest
     environment: dev
  
