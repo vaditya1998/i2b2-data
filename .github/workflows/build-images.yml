@@ -213,7 +213,7 @@ jobs:
 
       - name: Test with PostgreSQL
         run: |
-          core_server_tag="main"
+          core_server_tag="master"
           mkdir test_pgsql
           cd test_pgsql
           git clone -b 1.8.2-hotfixes https://github.com/i2b2/i2b2-docker
@@ -253,7 +253,7 @@ jobs:
 
       - name: Test with oracle
         run: |
-          core_server_tag="main"
+          core_server_tag="master"
           mkdir test_oracle
           cd test_oracle
           git clone -b 1.8.2-hotfixes https://github.com/adityapersistent/i2b2-docker
