@@ -80,6 +80,10 @@ psql -U $I2B2_HIVE_USER -d i2b2 -w -c "update work_db_lookup set c_db_fullschema
 psql -U $I2B2_HIVE_USER -d i2b2 -w -c "update ont_db_lookup set c_db_fullschema = 'i2b2metadata'"
 echo 
 
+echo "Updating i2b2 demo data: Fixing hardcoded PUBLIC schema references in i2b2metadata(c_dimcode)"
+psql -U $I2B2_METADATA_USER -d i2b2 -w -c "update i2b2metadata.i2b2 Set c_dimcode = REPLACE(c_dimcode, 'PUBLIC.PATIENT_DIMENSION', 'i2b2demodata.patient_dimension') where c_dimcode LIKE '%PUBLIC.PATIENT_DIMENSION%'; "
+
+
 echo "Demodata inserted successfully."
 rm -rf /i2b2/i2b2-data/edu.harvard.i2b2.data/
 

@@ -176,7 +176,7 @@ jobs:
           core_server_tag="main"
           mkdir test_mssql
           cd test_mssql
-          git clone -b 1.8.2-hotfixes https://github.com/i2b2/i2b2-docker
+          git clone https://github.com/i2b2/i2b2-docker
           cd i2b2-docker/mssql
           echo "Running MSSQL test cases for tag: $data_tag"
           source test_case.sh "$core_server_tag" "$data_tag" 
@@ -216,7 +216,7 @@ jobs:
           core_server_tag="master"
           mkdir test_pgsql
           cd test_pgsql
-          git clone -b 1.8.2-hotfixes https://github.com/i2b2/i2b2-docker
+          git clone https://github.com/i2b2/i2b2-docker
           cd i2b2-docker/pg
           echo "Running PGSQL test cases for tag: $data_tag"
           source test_case.sh "$core_server_tag" "$data_tag"
