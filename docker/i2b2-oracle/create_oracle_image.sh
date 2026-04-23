@@ -2,6 +2,8 @@
 
 # docker network remove i2b2-net
 I2B2_DATA_ORACLE_TAG=$1
+I2B2_CORE_SERVER_HOST="i2b2-core-server"
+I2B2_CORE_SERVER_PORT="8080"
 docker  network create i2b2-net
 
 docker run -d \
@@ -70,7 +72,7 @@ cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata
 cat "$root/docker/i2b2-oracle/db.properties"  | sed "s/localhost/$docker_network_gateway_ip/" |sed  "s/PWD/$DEMO_PASS/" | sed "s/USER_NAME/$CELL/" > db.properties
 
 echo "Replacing host:port in Pmdata/scripts/demo/pm_access_insert_data.sql.."
-sed -i "s/localhost:9090/$I2B2_WILDFLY_HOST:$I2B2_WILDFLY_PORT/g" $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata/scripts/demo/pm_access_insert_data.sql
+sed -i "s/localhost:9090/$I2B2_CORE_SERVER_HOST:$I2B2_CORE_SERVER_PORT/g" $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata/scripts/demo/pm_access_insert_data.sql
 
 ant -f data_build.xml create_pmdata_tables_release_1-8
 ant -f data_build.xml create_triggers_release_1-8
