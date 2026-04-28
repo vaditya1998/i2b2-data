@@ -20,10 +20,10 @@ docker run -i -e "ACCEPT_EULA=Y"  -e "SA_PASSWORD=<YourStrong@Passw0rd>" -e "TZ=
 sleep 50
 docker ps
 
-# 1. Install standard tools PLUS sqlpackage prerequisites (unzip, libunwind8)
+# Install standard tools PLUS sqlpackage prerequisites (unzip, libunwind8)
 docker exec --user root i2b2-mssql bash -c "apt-get update && apt-get install -yq curl apt-transport-https gnupg unzip libunwind8 && curl -sL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && curl -sL https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2019.list | tee /etc/apt/sources.list.d/mssql-server-2019.list && apt-get update && apt-get install -y mssql-server-fts mssql-tools unixodbc-dev"
 
-# 2. Download sqlpackage, extract it, set symlinks for permanent global access, and clean up
+# Download sqlpackage, extract it, set symlinks for permanent global access, and clean up
 docker exec --user root i2b2-mssql bash -c "curl -sL -o sqlpackage.zip https://aka.ms/sqlpackage-linux && unzip -qq sqlpackage.zip -d /opt/sqlpackage && chmod +x /opt/sqlpackage/sqlpackage && rm sqlpackage.zip && ln -s /opt/sqlpackage/sqlpackage /usr/local/bin/sqlpackage && ln -s /opt/mssql-tools/bin/sqlcmd /usr/local/bin/sqlcmd && ln -s /opt/mssql-tools/bin/bcp /usr/local/bin/bcp && apt-get clean && rm -rf /var/lib/apt/lists/*"
 
 docker restart i2b2-mssql
