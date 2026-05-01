@@ -136,11 +136,7 @@ rm -rf .git
 rm -rf edu.harvard.i2b2.data
 df -h
 
-if [[ -n "${docker_username:-}" && -n "${docker_reponame:-}" ]]; then
-    echo "Pushing image to repository..."
-    docker commit oracle23 "${docker_username}/${docker_reponame}:i2b2-data-oracle_${I2B2_DATA_ORACLE_TAG}"
-    echo "Committing Docker image..."
-    docker push "${docker_username}/${docker_reponame}:i2b2-data-oracle_${I2B2_DATA_ORACLE_TAG}"
-else
-    echo "Notice: docker_username or docker_reponame not set. Skipping push."
-fi
+
+echo "Committing Docker image..."
+docker commit oracle23 "${docker_username}/${docker_reponame}:i2b2-data-oracle_${I2B2_DATA_ORACLE_TAG}"
+docker push "${docker_username}/${docker_reponame}:i2b2-data-oracle_${I2B2_DATA_ORACLE_TAG}"
