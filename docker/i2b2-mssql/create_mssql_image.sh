@@ -22,10 +22,10 @@ I2B2_WILDFLY_HOST="i2b2-core-server"
 I2B2_WILDFLY_PORT="8080"
 
 # Setup paths (Designed for GitHub Actions CI runner environment)
-# root=/home/runner/work/i2b2-data/i2b2-data/
-# quickstart_path=/home/runner/work/i2b2-data/i2b2-data/docker/i2b2-mssql/i2b2-quickstart
-root=/home/aditya/i2b2/i2b2-data/
-quickstart_path=/home/aditya/i2b2/i2b2-data/docker/i2b2-mssql/i2b2-quickstart
+root=/home/runner/work/i2b2-data/i2b2-data/
+quickstart_path=/home/runner/work/i2b2-data/i2b2-data/docker/i2b2-mssql/i2b2-quickstart
+# root=/home/aditya/i2b2/i2b2-data/
+# quickstart_path=/home/aditya/i2b2/i2b2-data/docker/i2b2-mssql/i2b2-quickstart
 
 cd $root
 
