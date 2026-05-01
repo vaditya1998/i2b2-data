@@ -8,7 +8,7 @@
 # ==============================================================================
 
 # Exit immediately if a command exits with a non-zero status
-set -e
+set -eu
 
 # Validate input arguments
 if [ -z "$1" ]; then

@@ -12,8 +12,7 @@
 # Enforce strict error handling:
 # -e: Exit immediately if a command returns a non-zero status.
 # -u: Treat unset variables as an error.
-# -o pipefail: Return value of a pipeline is the status of the last command to exit with a non-zero status.
-set -euo pipefail
+set -eu
 
 # Validate input arguments
 if [[ -z "${1:-}" ]]; then
