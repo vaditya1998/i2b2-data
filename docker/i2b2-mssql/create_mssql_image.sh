@@ -175,7 +175,7 @@ echo "Completed data load for i2b2-data-mssql."
 
 echo "Committing and pushing Docker image..."
 docker commit i2b2-mssql $docker_username/$docker_reponame:i2b2-data-mssql_$I2B2_DATA_MSSQL_TAG
-# docker push $docker_username/$docker_reponame:i2b2-data-mssql_$I2B2_DATA_MSSQL_TAG
+docker push $docker_username/$docker_reponame:i2b2-data-mssql_$I2B2_DATA_MSSQL_TAG
 
 
 # #for act 
