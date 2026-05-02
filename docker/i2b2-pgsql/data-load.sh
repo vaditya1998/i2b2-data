@@ -11,11 +11,12 @@
 # Enforce strict error handling:
 # -e: Exit immediately if a command returns a non-zero status.
 # -u: Treat unset variables as an error.
-# -o pipefail: Return value of a pipeline is the status of the last command to exit with a non-zero status.
 set -eu
 
 I2B2_WILDFLY_HOST="${I2B2_WILDFLY_HOST:-i2b2-core-server}"
 I2B2_WILDFLY_PORT="${I2B2_WILDFLY_PORT:-8080}"
+PG_HOST="${PG_HOST:-$(docker network inspect i2b2-net -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')}"
+
 PG_USER="postgres"
 BASE_DIR="/i2b2"
 I2B2_DATA_DIR="$BASE_DIR/i2b2-data/edu.harvard.i2b2.data/Release_1-8/NewInstall"
@@ -59,7 +60,7 @@ CELL="i2b2demodata"
 cd "$CRCDATA_DIR"
 # Safely replace placeholders in db.properties using a single sed invocation
 # Pipe delimiter '|' is used to prevent injection issues if variables contain slashes
-sed -e "s|localhost|172.17.0.1|g" \
+sed -e "s|localhost|$PG_HOST|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -71,7 +72,7 @@ ant -f data_build.xml db_demodata_load_data
 echo "Loading HIVE Data..."
 CELL="i2b2hive"
 cd "$HIVEDATA_DIR"
-sed -e "s|localhost|172.17.0.1|g" \
+sed -e "s|localhost|$PG_HOST|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -82,12 +83,11 @@ ant -f data_build.xml db_hivedata_load_data
 echo "Loading Metadata..."
 CELL="i2b2metadata"
 cd "$METADATA_DIR"
-sed -e "s|localhost|172.17.0.1|g" \
+sed -e "s|localhost|$PG_HOST|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
     "$BASE_DIR/i2b2-data/docker/i2b2-pgsql/db.properties" > db.properties
-cat db.properties
 ant -f data_build.xml create_metadata_tables_release_1-8
 ant -f data_build.xml db_metadata_load_data 
 ant -f data_build.xml create_metadata_procedures_release_1-8
@@ -96,7 +96,7 @@ ant -f data_build.xml create_metadata_procedures_release_1-8
 echo "Loading PM Data..."
 CELL="i2b2pm"
 cd "$PMDATA_DIR"
-sed -e "s|localhost|172.17.0.1|g" \
+sed -e "s|localhost|$PG_HOST|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -112,7 +112,7 @@ ant -f data_build.xml db_pmdata_load_data
 echo "Loading Workplace Data..."
 CELL="i2b2workdata"
 cd "$WORKDATA_DIR"
-sed -e "s|localhost|172.17.0.1|g" \
+sed -e "s|localhost|$PG_HOST|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -137,14 +137,12 @@ rm -rf /i2b2/i2b2-data/edu.harvard.i2b2.data/
 # # for act 
 # CELL="i2b2demodata"
 # cd "$CRCDATA_DIR"
-# sed -e "s|localhost|172.17.0.1|g" -e "s|PWD|$DEMO_PASS|g" -e "s|USER_NAME|$CELL|g" -e "s|DB_NAME|$CELL|g" -e "s|db.project=demo|db.project=act|g" "$BASE_DIR/db.properties" > db.properties	
-# cat db.properties
+# sed -e "s|localhost|$PG_HOST|g" -e "s|PWD|$DEMO_PASS|g" -e "s|USER_NAME|$CELL|g" -e "s|DB_NAME|$CELL|g" -e "s|db.project=demo|db.project=act|g" "$BASE_DIR/db.properties" > db.properties	
 # ant -f data_build.xml db_demodata_load_data
 
 # # for act 
 # CELL="i2b2metadata"
 # cd "$METADATA_DIR"
-# sed -e "s|localhost|172.17.0.1|g" -e "s|PWD|$DEMO_PASS|g" -e "s|USER_NAME|$CELL|g" -e "s|DB_NAME|$CELL|g" -e "s|db.project=demo|db.project=act|g" "$BASE_DIR/db.properties" > db.properties
-# cat db.properties
+# sed -e "s|localhost|$PG_HOST|g" -e "s|PWD|$DEMO_PASS|g" -e "s|USER_NAME|$CELL|g" -e "s|DB_NAME|$CELL|g" -e "s|db.project=demo|db.project=act|g" "$BASE_DIR/db.properties" > db.properties
 # ant -f data_build.xml create_metadata_tables_release_1-8
 # ant -f data_build.xml db_metadata_load_data 

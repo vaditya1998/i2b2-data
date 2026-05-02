@@ -1,7 +1,18 @@
+#!/bin/bash
+
+# ==============================================================================
+# Script Name: pg_ubuntu.sh
+# Description: Installs and configures PostgreSQL on an Ubuntu container.
+# ==============================================================================
+
+set -eu
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y postgresql postgresql-contrib ant
+
+# Clean up apt cache to reduce image size
+rm -rf /var/lib/apt/lists/*
 
 /etc/init.d/postgresql status
 /etc/init.d/postgresql start
@@ -24,4 +35,4 @@ user_name=$(whoami)
 /etc/init.d/postgresql restart
 
 date 
-sh /i2b2/i2b2-data/docker/i2b2-pgsql/data-load.sh
+bash /i2b2/i2b2-data/docker/i2b2-pgsql/data-load.sh

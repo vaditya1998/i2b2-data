@@ -11,13 +11,13 @@
 set -eu
 
 # Validate input arguments
-if [ -z "$1" ]; then
+if [ -z "${1:-}" ]; then
     echo "Error: Missing required argument I2B2_DATA_MSSQL_TAG."
     echo "Usage: $0 <I2B2_DATA_MSSQL_TAG>"
     exit 1
 fi
 
-I2B2_DATA_MSSQL_TAG=$1
+I2B2_DATA_MSSQL_TAG="$1"
 I2B2_WILDFLY_HOST="i2b2-core-server"
 I2B2_WILDFLY_PORT="8080"
 
@@ -27,16 +27,16 @@ quickstart_path=/home/runner/work/i2b2-data/i2b2-data/docker/i2b2-mssql/i2b2-qui
 # root=/home/aditya/i2b2/i2b2-data/
 # quickstart_path=/home/aditya/i2b2/i2b2-data/docker/i2b2-mssql/i2b2-quickstart
 
-cd $root
+cd "$root"
 
-IP=localhost	
 DEMO_PASS="${I2B2_DEMO_PASS:-Demouser123}"
 SA_PASSWORD="${MSSQL_SA_PASSWORD:-<YourStrong@Passw0rd>}"
-cd $quickstart_path
-BASE=$(pwd)
+cd "$quickstart_path"
+BASE="$(pwd)"
 
 echo "Creating Docker network and starting MSSQL container..."
 docker network create i2b2-net || true
+DOCKER_GATEWAY_IP=$(docker network inspect i2b2-net -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
 docker images 
 
 docker run -i -e "ACCEPT_EULA=Y"  -e "SA_PASSWORD=$SA_PASSWORD" -e "TZ=America/New_York" -p 1433:1433 --net i2b2-net --name i2b2-mssql -d mcr.microsoft.com/mssql/server:2019-latest
@@ -82,13 +82,12 @@ echo "=================== LOADING DATA INTO CELLS ==================="
 # CRC Data
 echo "Loading CRC Data..."
 CELL=i2b2demodata
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Crcdata/
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Crcdata/"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
     "$BASE/conf/mssql/db.properties" > db.properties
-cat db.properties
 ant -f data_build.xml create_crcdata_tables_release_1-8
 ant -f data_build.xml create_procedures_release_1-8
 ant -f data_build.xml db_demodata_load_data
@@ -96,8 +95,8 @@ ant -f data_build.xml db_demodata_load_data
 # HIVE Data
 echo "Loading HIVE Data..."
 CELL=i2b2hive
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Hivedata
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Hivedata"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -108,41 +107,39 @@ ant -f data_build.xml db_hivedata_load_data
 # Metadata
 echo "Loading Metadata..."
 CELL=i2b2metadata
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Metadata
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Metadata"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
     "$BASE/conf/mssql/db.properties" > db.properties
-cat db.properties
 ant -f data_build.xml create_metadata_tables_release_1-8
 ant -f data_build.xml db_metadata_load_data 
 
 # IM Data
 echo "Loading IM Data..."
 CELL=i2b2imdata
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Imdata
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Imdata"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
     "$BASE/conf/mssql/db.properties" > db.properties
-cat db.properties
 ant -f data_build.xml create_imdata_tables_release_1-8
 ant -f data_build.xml db_imdata_load_data 
 
 # PM Data
 echo "Loading PM Data..."
 CELL=i2b2pm
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
     "$BASE/conf/mssql/db.properties" > db.properties
 
 echo "Replacing host:port in Pmdata/scripts/demo/pm_access_insert_data.sql.."
-sed -i "s/localhost:9090/$I2B2_WILDFLY_HOST:$I2B2_WILDFLY_PORT/g" $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata/scripts/demo/pm_access_insert_data.sql
+sed -i "s/localhost:9090/$I2B2_WILDFLY_HOST:$I2B2_WILDFLY_PORT/g" "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Pmdata/scripts/demo/pm_access_insert_data.sql"
 
 ant -f data_build.xml create_pmdata_tables_release_1-8
 ant -f data_build.xml create_triggers_release_1-8
@@ -151,8 +148,8 @@ ant -f data_build.xml db_pmdata_load_data
 # Workplace Data
 echo "Loading Workplace Data..."
 CELL=i2b2workdata
-cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Workdata
-sed -e "s|localhost|172.17.0.1|g" \
+cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Workdata"
+sed -e "s|localhost|$DOCKER_GATEWAY_IP|g" \
     -e "s|PWD|$DEMO_PASS|g" \
     -e "s|USER_NAME|$CELL|g" \
     -e "s|DB_NAME|$CELL|g" \
@@ -162,41 +159,39 @@ ant -f data_build.xml db_workdata_load_data
 
 echo "=================== DATA LOADING COMPLETE ==================="
 
-cd $BASE
+cd "$BASE"
 
 sleep 20
 df -h
 
 echo "Cleaning up i2b2-data repo to resolve space issues..."
-rm -rf /home/runner/work/i2b2-data/i2b2-data/i2b2-mssql/i2b2-data/edu.harvard.i2b2.data/
+rm -rf "$root/edu.harvard.i2b2.data/"
 
 df -h
 echo "Completed data load for i2b2-data-mssql."
 
 echo "Committing and pushing Docker image..."
-docker commit i2b2-mssql $docker_username/$docker_reponame:i2b2-data-mssql_$I2B2_DATA_MSSQL_TAG
-docker push $docker_username/$docker_reponame:i2b2-data-mssql_$I2B2_DATA_MSSQL_TAG
+docker commit i2b2-mssql "${docker_username}/${docker_reponame}:i2b2-data-mssql_${I2B2_DATA_MSSQL_TAG}"
+docker push "${docker_username}/${docker_reponame}:i2b2-data-mssql_${I2B2_DATA_MSSQL_TAG}"
 
 
 # #for act 
+# CELL=i2b2demodata
+# cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Crcdata/""
+# cat "$BASE/conf/mssql/db.properties" | sed "s/localhost/$DOCKER_GATEWAY_IP/g" |sed "s/PWD/$DEMO_PASS/g" | sed "s/USER_NAME/$CELL/g"| sed "s/DB_NAME/$CELL/g" > db.properties	
+# cat db.properties
+# ant -f data_build.xml create_crcdata_tables_release_1-8 #only 1 executes
+# # ant -f data_build.xml create_procedures_release_1-8
+# ant -f data_build.xml db_demodata_load_data
+
 # CELL=i2b2metadata
-# cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Metadata
-# cat "$BASE/conf/mssql/db.properties"  | sed "s/localhost/172.17.0.1/" |sed  "s/PWD/$DEMO_PASS/" | sed "s/USER_NAME/$CELL/"| sed "s/DB_NAME/$CELL/" > db.properties
+# cd "$root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Metadata"
+# cat "$BASE/conf/mssql/db.properties"  | sed "s/localhost/$DOCKER_GATEWAY_IP/" |sed  "s/PWD/$DEMO_PASS/" | sed "s/USER_NAME/$CELL/"| sed "s/DB_NAME/$CELL/" > db.properties
 # cat db.properties
 # ant -f data_build.xml create_metadata_tables_release_1-8
 # ant -f data_build.xml db_metadata_load_data 
 # # ant -f data_build.xml create_metadata_procedures_release_1-8
 # # ant -f data_build.xml db_metadata_load_identified_data 
-
-
-#act
-# CELL=i2b2demodata
-# cd $root/edu.harvard.i2b2.data/Release_1-8/NewInstall/Crcdata/
-# cat "$BASE/conf/mssql/db.properties" | sed "s/localhost/172.17.0.1/g" |sed "s/PWD/$DEMO_PASS/g" | sed "s/USER_NAME/$CELL/g"| sed "s/DB_NAME/$CELL/g" > db.properties	
-# cat db.properties
-# ant -f data_build.xml create_crcdata_tables_release_1-8 #only 1 executes
-# # ant -f data_build.xml create_procedures_release_1-8
-# ant -f data_build.xml db_demodata_load_data
 
 
 
